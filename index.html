@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>SUB.9 Vehicle Dynamics Calculator</title>
+
+  <style>
+    :root {
+      --olo: #00ffcc;
+      --yellow: #fffe00;
+      --black: #000000;
+      --white: #ffffff;
+      --gray: #eeeeee;
+      --dark-gray: #555555;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--black);
+      color: var(--white);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    header {
+      border-bottom: 2px solid var(--olo);
+      padding: 28px 24px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(0, 255, 204, 0.13),
+          transparent 45%
+        );
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 5vw, 52px);
+      letter-spacing: -2px;
+    }
+
+    header p {
+      margin: 0;
+      max-width: 850px;
+      color: #cccccc;
+      line-height: 1.6;
+    }
+
+    .accent {
+      color: var(--olo);
+    }
+
+    main {
+      width: min(1400px, 100%);
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .warning {
+      border: 1px solid var(--yellow);
+      padding: 14px 16px;
+      margin-bottom: 22px;
+      color: var(--yellow);
+      line-height: 1.5;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(320px, 1.1fr) minmax(300px, 0.9fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1px solid #333333;
+      background: #0d0d0d;
+      padding: 22px;
+    }
+
+    .panel h2 {
+      margin-top: 0;
+      font-size: 22px;
+    }
+
+    .section {
+      border-top: 1px solid #333333;
+      padding-top: 18px;
+      margin-top: 22px;
+    }
+
+    .section:first-of-type {
+      border-top: none;
+      padding-top: 0;
+      margin-top: 0;
+    }
+
+    .section h3 {
+      margin: 0 0 14px;
+      font-size: 17px;
+      color: var(--olo);
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(140px, 1fr));
+      gap: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #bbbbbb;
+      margin-bottom: 6px;
+    }
+
+    .field {
+      min-width: 0;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #444444;
+      background: #050505;
+      color: var(--white);
+      padding: 11px 12px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--olo);
+    }
+
+    .unit {
+      font-size: 11px;
+      color: #777777;
+      margin-top: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px 18px;
+      margin-top: 22px;
+      border: 2px solid var(--olo);
+      background: var(--olo);
+      color: var(--black);
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: transparent;
+      color: var(--olo);
+    }
+
+    .secondary-button {
+      border-color: #555555;
+      background: transparent;
+      color: var(--white);
+      margin-top: 10px;
+    }
+
+    .secondary-button:hover {
+      border-color: var(--yellow);
+      color: var(--yellow);
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(120px, 1fr));
+      gap: 12px;
+    }
+
+    .result-card {
+      border: 1px solid #333333;
+      padding: 16px;
+      min-height: 104px;
+    }
+
+    .result-card.primary {
+      border-color: var(--olo);
+    }
+
+    .result-label {
+      font-size: 12px;
+      color: #999999;
+      margin-bottom: 9px;
+    }
+
+    .result-value {
+      font-size: 25px;
+      font-weight: 800;
+      word-break: break-word;
+    }
+
+    .result-value.olo {
+      color: var(--olo);
+    }
+
+    .result-value.yellow {
+      color: var(--yellow);
+    }
+
+    .details {
+      margin-top: 20px;
+      border-top: 1px solid #333333;
+      padding-top: 16px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      border-bottom: 1px solid #222222;
+      padding: 10px 0;
+      font-size: 13px;
+    }
+
+    .detail-row span:first-child {
+      color: #999999;
+    }
+
+    canvas {
+      width: 100%;
+      height: 260px;
+      background: #050505;
+      border: 1px solid #333333;
+      margin-top: 18px;
+    }
+
+    .model-note {
+      font-size: 12px;
+      color: #888888;
+      line-height: 1.6;
+      margin-top: 18px;
+    }
+
+    footer {
+      padding: 32px 24px;
+      text-align: center;
+      color: #777777;
+      font-size: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 550px) {
+      main {
+        padding: 14px;
+      }
+
+      .panel {
+        padding: 16px;
+      }
+
+      .input-grid,
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>SUB.9 <span class="accent">Dynamics Calculator</span></h1>
+    <p>
+      F1 in Schools 차량의 종방향 가속, 공기저항, 회전관성,
+      노즐 오차 및 좌우 저항 차이를 이용해 20 m 주행시간과
+      횡방향 편차를 근사 계산합니다.
+    </p>
+  </header>
+
+  <main>
+    <div class="warning">
+      이 계산기는 설계 비교용 1차 물리 모델입니다.
+      실측 thrust-time curve, bearing torque, yaw inertia 및 가이드 접촉을
+      입력해야 정확도가 높아집니다.
+    </div>
+
+    <div class="layout">
+      <section class="panel">
+        <h2>Input Parameters</h2>
+
+        <div class="section">
+          <h3>Vehicle</h3>
+
+          <div class="input-grid">
+            <div class="field">
+              <label for="trackLength">Track length</label>
+              <input id="trackLength" type="number" step="0.1" value="20" />
+              <div class="unit">m</div>
+            </div>
+
+            <div class="field">
+              <label for="vehicleMass">Vehicle mass</label>
+              <input id="vehicleMass" type="number" step="1" value="55" />
+              <div class="unit">g</div>
+            </div>
+
+            <div class="field">
+              <label for="wheelCount">Wheel count</label>
+              <input id="wheelCount" type="number" step="1" value="4" />
+              <div class="unit">count</div>
+            </div>
+
+            <div class="field">
+              <label for="wheelMass">Mass per wheel</label>
+              <input id="wheelMass" type="number" step="0.1" value="1.5" />
+              <div class="unit">g</div>
+            </div>
+
+            <div class="field">
+              <label for="wheelRadius">Wheel radius</label>
+              <input id="wheelRadius" type="number" step="0.1" value="15" />
+              <div class="unit">mm</div>
+            </div>
+
+            <div class="field">
+              <label for="wheelInertiaFactor">Wheel inertia factor k</label>
+              <select id="wheelInertiaFactor">
+                <option value="0.5">0.5 — solid disc</option>
+                <option value="1">1.0 — thin ring</option>
+                <option value="0.65" selected>0.65 — lightweight wheel estimate</option>
+              </select>
+              <div class="unit">I = kmr²</div>
+            </div>
+
+            <div class="field">
+              <label for="yawInertia">Yaw moment of inertia</label>
+              <input id="yawInertia" type="number" step="0.000001" value="0.00012" />
+              <div class="unit">kg·m²</div>
+            </div>
+
+            <div class="field">
+              <label for="trackWidth">Left-right wheel spacing</label>
+              <input id="trackWidth" type="number" step="0.1" value="55" />
+              <div class="unit">mm</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>CO₂ Thrust</h3>
+
+          <div class="input-grid">
+            <div class="field">
+              <label for="peakThrust">Peak thrust</label>
+              <input id="peakThrust" type="number" step="0.1" value="8" />
+              <div class="unit">N — temporary estimate</div>
+            </div>
+
+            <div class="field">
+              <label for="thrustDuration">Thrust duration</label>
+              <input id="thrustDuration" type="number" step="0.01" value="0.30" />
+              <div class="unit">s</div>
+            </div>
+
+            <div class="field">
+              <label for="thrustShape">Thrust curve shape</label>
+              <select id="thrustShape">
+                <option value="constant">Constant</option>
+                <option value="linear" selected>Linear decay</option>
+                <option value="exponential">Exponential decay</option>
+              </select>
+              <div class="unit">F(t)</div>
+            </div>
+
+            <div class="field">
+              <label for="nozzleAngle">Nozzle misalignment</label>
+              <input id="nozzleAngle" type="number" step="0.01" value="0" />
+              <div class="unit">degree</div>
+            </div>
+
+            <div class="field">
+              <label for="nozzleLeverArm">Nozzle–CoG lever arm</label>
+              <input id="nozzleLeverArm" type="number" step="0.1" value="70" />
+              <div class="unit">mm</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Aerodynamics & Resistance</h3>
+
+          <div class="input-grid">
+            <div class="field">
+              <label for="dragCoefficient">Drag coefficient Cd</label>
+              <input id="dragCoefficient" type="number" step="0.01" value="0.16" />
+              <div class="unit">dimensionless</div>
+            </div>
+
+            <div class="field">
+              <label for="frontalArea">Frontal area</label>
+              <input id="frontalArea" type="number" step="0.0001" value="0.002" />
+              <div class="unit">m²</div>
+            </div>
+
+            <div class="field">
+              <label for="airDensity">Air density</label>
+              <input id="airDensity" type="number" step="0.001" value="1.225" />
+              <div class="unit">kg/m³</div>
+            </div>
+
+            <div class="field">
+              <label for="rollingCoefficient">Rolling resistance coefficient</label>
+              <input id="rollingCoefficient" type="number" step="0.001" value="0.01" />
+              <div class="unit">temporary estimate</div>
+            </div>
+
+            <div class="field">
+              <label for="bearingTorque">Total bearing friction torque</label>
+              <input id="bearingTorque" type="number" step="0.000001" value="0.00002" />
+              <div class="unit">N·m, all wheels combined</div>
+            </div>
+
+            <div class="field">
+              <label for="guideResistance">Guide longitudinal resistance</label>
+              <input id="guideResistance" type="number" step="0.001" value="0" />
+              <div class="unit">N</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Straight-Line Error</h3>
+
+          <div class="input-grid">
+            <div class="field">
+              <label for="leftRightForceDifference">Left-right resistance difference</label>
+              <input
+                id="leftRightForceDifference"
+                type="number"
+                step="0.001"
+                value="0"
+              />
+              <div class="unit">N, positive turns right</div>
+            </div>
+
+            <div class="field">
+              <label for="aeroYawMoment">Constant aerodynamic yaw moment</label>
+              <input id="aeroYawMoment" type="number" step="0.000001" value="0" />
+              <div class="unit">N·m</div>
+            </div>
+
+            <div class="field">
+              <label for="alignmentYawMoment">Alignment yaw moment</label>
+              <input id="alignmentYawMoment" type="number" step="0.000001" value="0" />
+              <div class="unit">N·m</div>
+            </div>
+
+            <div class="field">
+              <label for="yawDamping">Yaw damping coefficient</label>
+              <input id="yawDamping" type="number" step="0.000001" value="0.00008" />
+              <div class="unit">N·m·s/rad</div>
+            </div>
+          </div>
+        </div>
+
+        <button id="calculateButton">CALCULATE</button>
+        <button id="resetButton" class="secondary-button">RESET</button>
+      </section>
+
+      <section class="panel">
+        <h2>Results</h2>
+
+        <div class="result-grid">
+          <div class="result-card primary">
+            <div class="result-label">Estimated finish time</div>
+            <div id="finishTime" class="result-value olo">—</div>
+          </div>
+
+          <div class="result-card primary">
+            <div class="result-label">Finish lateral deviation</div>
+            <div id="finishDeviation" class="result-value yellow">—</div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-label">Finish speed</div>
+            <div id="finishSpeed" class="result-value">—</div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-label">Maximum speed</div>
+            <div id="maxSpeed" class="result-value">—</div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-label">Yaw angle at finish</div>
+            <div id="finishYaw" class="result-value">—</div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-label">Maximum lateral deviation</div>
+            <div id="maxDeviation" class="result-value">—</div>
+          </div>
+        </div>
+
+        <canvas id="chart" width="760" height="300"></canvas>
+
+        <div class="details">
+          <div class="detail-row">
+            <span>Effective vehicle mass</span>
+            <strong id="effectiveMass">—</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Peak aerodynamic drag</span>
+            <strong id="peakDrag">—</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Rolling resistance</span>
+            <strong id="rollingForce">—</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Bearing equivalent force</span>
+            <strong id="bearingForce">—</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Maximum yaw rate</span>
+            <strong id="maxYawRate">—</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Simulation steps</span>
+            <strong id="simulationSteps">—</strong>
+          </div>
+        </div>
+
+        <div class="model-note">
+          수치해석은 고정 시간 간격 Euler integration을 사용합니다.
+          가이드 와이어의 충돌과 복원력, 바퀴 slip, 축 진동 및
+          속도별 베어링 마찰 변화는 아직 포함하지 않았습니다.
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    SUB.9 Engineering · Push To Limit
+  </footer>
+
+  <script>
+    const G = 9.80665;
+    const DEG_TO_RAD = Math.PI / 180;
+
+    const getNumber = (id) => {
+      const value = Number(document.getElementById(id).value);
+
+      if (!Number.isFinite(value)) {
+        throw new Error(`${id} 값이 올바르지 않습니다.`);
+      }
+
+      return value;
+    };
+
+    function getThrust(t, peakThrust, duration, shape) {
+      if (t < 0 || t > duration || duration <= 0) {
+        return 0;
+      }
+
+      if (shape === "constant") {
+        return peakThrust;
+      }
+
+      if (shape === "linear") {
+        return peakThrust * Math.max(0, 1 - t / duration);
+      }
+
+      if (shape === "exponential") {
+        const decayRate = 5 / duration;
+        return peakThrust * Math.exp(-decayRate * t);
+      }
+
+      return 0;
+    }
+
+    function validateInputs(params) {
+      const positiveValues = [
+        ["trackLength", params.trackLength],
+        ["vehicleMass", params.vehicleMass],
+        ["wheelCount", params.wheelCount],
+        ["wheelMass", params.wheelMass],
+        ["wheelRadius", params.wheelRadius],
+        ["yawInertia", params.yawInertia],
+        ["trackWidth", params.trackWidth],
+        ["frontalArea", params.frontalArea],
+        ["airDensity", params.airDensity]
+      ];
+
+      for (const [name, value] of positiveValues) {
+        if (value <= 0) {
+          throw new Error(`${name} 값은 0보다 커야 합니다.`);
+        }
+      }
+
+      if (params.dragCoefficient < 0) {
+        throw new Error("Cd는 음수가 될 수 없습니다.");
+      }
+
+      if (params.rollingCoefficient < 0) {
+        throw new Error("구름저항계수는 음수가 될 수 없습니다.");
+      }
+    }
+
+    function simulate() {
+      const params = {
+        trackLength: getNumber("trackLength"),
+        vehicleMass: getNumber("vehicleMass") / 1000,
+        wheelCount: getNumber("wheelCount"),
+        wheelMass: getNumber("wheelMass") / 1000,
+        wheelRadius: getNumber("wheelRadius") / 1000,
+        wheelInertiaFactor: getNumber("wheelInertiaFactor"),
+        yawInertia: getNumber("yawInertia"),
+        trackWidth: getNumber("trackWidth") / 1000,
+
+        peakThrust: getNumber("peakThrust"),
+        thrustDuration: getNumber("thrustDuration"),
+        thrustShape: document.getElementById("thrustShape").value,
+        nozzleAngle: getNumber("nozzleAngle") * DEG_TO_RAD,
+        nozzleLeverArm: getNumber("nozzleLeverArm") / 1000,
+
+        dragCoefficient: getNumber("dragCoefficient"),
+        frontalArea: getNumber("frontalArea"),
+        airDensity: getNumber("airDensity"),
+        rollingCoefficient: getNumber("rollingCoefficient"),
+        bearingTorque: getNumber("bearingTorque"),
+        guideResistance: getNumber("guideResistance"),
+
+        leftRightForceDifference: getNumber("leftRightForceDifference"),
+        aeroYawMoment: getNumber("aeroYawMoment"),
+        alignmentYawMoment: getNumber("alignmentYawMoment"),
+        yawDamping: getNumber("yawDamping")
+      };
+
+      validateInputs(params);
+
+      const wheelInertia =
+        params.wheelInertiaFactor *
+        params.wheelMass *
+        params.wheelRadius ** 2;
+
+      const rotationalEquivalentMass =
+        params.wheelCount *
+        wheelInertia /
+        params.wheelRadius ** 2;
+
+      const effectiveMass =
+        params.vehicleMass +
+        rotationalEquivalentMass;
+
+      const rollingForce =
+        params.rollingCoefficient *
+        params.vehicleMass *
+        G;
+
+      const bearingForce =
+        params.bearingTorque /
+        params.wheelRadius;
+
+      const wheelYawMoment =
+        params.leftRightForceDifference *
+        params.trackWidth /
+        2;
+
+      let t = 0;
+      let x = 0;
+      let vx = 0;
+
+      let y = 0;
+      let vy = 0;
+
+      let yaw = 0;
+      let yawRate = 0;
+
+      let maxSpeed = 0;
+      let maxDeviation = 0;
+      let maxYawRate = 0;
+      let peakDrag = 0;
+
+      const dt = 0.0001;
+      const maximumTime = 10;
+      const maximumSteps = Math.ceil(maximumTime / dt);
+
+      const history = [];
+      let steps = 0;
+
+      while (x < params.trackLength && steps < maximumSteps) {
+        const thrustMagnitude = getThrust(
+          t,
+          params.peakThrust,
+          params.thrustDuration,
+          params.thrustShape
+        );
+
+        const thrustX =
+          thrustMagnitude *
+          Math.cos(params.nozzleAngle);
+
+        const thrustY =
+          thrustMagnitude *
+          Math.sin(params.nozzleAngle);
+
+        const dragForce =
+          0.5 *
+          params.airDensity *
+          params.dragCoefficient *
+          params.frontalArea *
+          vx ** 2;
+
+        peakDrag = Math.max(peakDrag, dragForce);
+
+        const totalLongitudinalResistance =
+          dragForce +
+          rollingForce +
+          bearingForce +
+          params.guideResistance;
+
+        let longitudinalForce =
+          thrustX -
+          totalLongitudinalResistance;
+
+        if (vx <= 0 && longitudinalForce < 0) {
+          longitudinalForce = 0;
+        }
+
+        const ax = longitudinalForce / effectiveMass;
+
+        const nozzleYawMoment =
+          thrustY *
+          params.nozzleLeverArm;
+
+        const totalYawMoment =
+          nozzleYawMoment +
+          wheelYawMoment +
+          params.aeroYawMoment +
+          params.alignmentYawMoment -
+          params.yawDamping * yawRate;
+
+        const yawAcceleration =
+          totalYawMoment /
+          params.yawInertia;
+
+        /*
+          단순 횡방향 모델:
+          1. 노즐 횡력으로 직접 발생하는 횡가속
+          2. 차체가 yaw된 상태에서 전진속도의 방향 성분
+        */
+        const directLateralAcceleration =
+          thrustY /
+          params.vehicleMass;
+
+        yawRate += yawAcceleration * dt;
+        yaw += yawRate * dt;
+
+        vx += ax * dt;
+        vx = Math.max(0, vx);
+
+        vy += directLateralAcceleration * dt;
+
+        const worldVx =
+          vx * Math.cos(yaw);
+
+        const worldVy =
+          vx * Math.sin(yaw) + vy;
+
+        x += worldVx * dt;
+        y += worldVy * dt;
+
+        t += dt;
+        steps += 1;
+
+        maxSpeed = Math.max(maxSpeed, vx);
+        maxDeviation = Math.max(maxDeviation, Math.abs(y));
+        maxYawRate = Math.max(maxYawRate, Math.abs(yawRate));
+
+        if (steps % 100 === 0) {
+          history.push({
+            t,
+            x,
+            vx,
+            y,
+            yaw
+          });
+        }
+
+        if (vx === 0 && t > params.thrustDuration + 0.5) {
+          break;
+        }
+      }
+
+      const finished = x >= params.trackLength;
+
+      return {
+        finished,
+        finishTime: finished ? t : null,
+        finishSpeed: vx,
+        maxSpeed,
+        finishDeviation: y,
+        maxDeviation,
+        finishYaw: yaw,
+        maxYawRate,
+        effectiveMass,
+        peakDrag,
+        rollingForce,
+        bearingForce,
+        steps,
+        history
+      };
+    }
+
+    function format(value, digits = 3) {
+      if (!Number.isFinite(value)) {
+        return "—";
+      }
+
+      return value.toFixed(digits);
+    }
+
+    function updateResults(result) {
+      document.getElementById("finishTime").textContent =
+        result.finished
+          ? `${format(result.finishTime, 4)} s`
+          : "Did not finish";
+
+      document.getElementById("finishDeviation").textContent =
+        `${format(result.finishDeviation * 1000, 2)} mm`;
+
+      document.getElementById("finishSpeed").textContent =
+        `${format(result.finishSpeed, 2)} m/s`;
+
+      document.getElementById("maxSpeed").textContent =
+        `${format(result.maxSpeed, 2)} m/s`;
+
+      document.getElementById("finishYaw").textContent =
+        `${format(result.finishYaw / DEG_TO_RAD, 3)}°`;
+
+      document.getElementById("maxDeviation").textContent =
+        `${format(result.maxDeviation * 1000, 2)} mm`;
+
+      document.getElementById("effectiveMass").textContent =
+        `${format(result.effectiveMass * 1000, 2)} g`;
+
+      document.getElementById("peakDrag").textContent =
+        `${format(result.peakDrag, 4)} N`;
+
+      document.getElementById("rollingForce").textContent =
+        `${format(result.rollingForce, 5)} N`;
+
+      document.getElementById("bearingForce").textContent =
+        `${format(result.bearingForce, 5)} N`;
+
+      document.getElementById("maxYawRate").textContent =
+        `${format(result.maxYawRate / DEG_TO_RAD, 3)} °/s`;
+
+      document.getElementById("simulationSteps").textContent =
+        result.steps.toLocaleString();
+
+      drawChart(result.history);
+    }
+
+    function drawChart(history) {
+      const canvas = document.getElementById("chart");
+      const ctx = canvas.getContext("2d");
+
+      const cssWidth = canvas.clientWidth;
+      const cssHeight = canvas.clientHeight;
+      const ratio = window.devicePixelRatio || 1;
+
+      canvas.width = cssWidth * ratio;
+      canvas.height = cssHeight * ratio;
+
+      ctx.scale(ratio, ratio);
+      ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+      ctx.fillStyle = "#050505";
+      ctx.fillRect(0, 0, cssWidth, cssHeight);
+
+      const padding = {
+        left: 54,
+        right: 18,
+        top: 22,
+        bottom: 38
+      };
+
+      const plotWidth =
+        cssWidth -
+        padding.left -
+        padding.right;
+
+      const plotHeight =
+        cssHeight -
+        padding.top -
+        padding.bottom;
+
+      ctx.strokeStyle = "#333333";
+      ctx.lineWidth = 1;
+
+      ctx.beginPath();
+      ctx.moveTo(padding.left, padding.top);
+      ctx.lineTo(padding.left, padding.top + plotHeight);
+      ctx.lineTo(padding.left + plotWidth, padding.top + plotHeight);
+      ctx.stroke();
+
+      if (!history.length) {
+        ctx.fillStyle = "#888888";
+        ctx.font = "13px Arial";
+        ctx.fillText(
+          "No simulation data",
+          padding.left + 18,
+          padding.top + 30
+        );
+        return;
+      }
+
+      const maxX =
+        Math.max(...history.map((point) => point.x), 1);
+
+      const maxAbsY =
+        Math.max(
+          ...history.map((point) => Math.abs(point.y)),
+          0.001
+        );
+
+      const xScale = plotWidth / maxX;
+      const yScale = plotHeight / (maxAbsY * 2);
+
+      const centerY =
+        padding.top +
+        plotHeight / 2;
+
+      ctx.strokeStyle = "#444444";
+      ctx.beginPath();
+      ctx.moveTo(padding.left, centerY);
+      ctx.lineTo(padding.left + plotWidth, centerY);
+      ctx.stroke();
+
+      ctx.strokeStyle = "#00ffcc";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+
+      history.forEach((point, index) => {
+        const px =
+          padding.left +
+          point.x * xScale;
+
+        const py =
+          centerY -
+          point.y * yScale;
+
+        if (index === 0) {
+          ctx.moveTo(px, py);
+        } else {
+          ctx.lineTo(px, py);
+        }
+      });
+
+      ctx.stroke();
+
+      ctx.fillStyle = "#aaaaaa";
+      ctx.font = "12px Arial";
+
+      ctx.fillText(
+        "Distance x (m)",
+        padding.left + plotWidth / 2 - 35,
+        cssHeight - 10
+      );
+
+      ctx.save();
+      ctx.translate(14, padding.top + plotHeight / 2 + 40);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText("Lateral deviation y", 0, 0);
+      ctx.restore();
+
+      ctx.fillStyle = "#00ffcc";
+      ctx.fillText(
+        `±${(maxAbsY * 1000).toFixed(1)} mm`,
+        padding.left + 8,
+        padding.top + 14
+      );
+    }
+
+    function calculateAndDisplay() {
+      try {
+        const result = simulate();
+        updateResults(result);
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+      }
+    }
+
+    document
+      .getElementById("calculateButton")
+      .addEventListener("click", calculateAndDisplay);
+
+    document
+      .getElementById("resetButton")
+      .addEventListener("click", () => {
+        window.location.reload();
+      });
+
+    window.addEventListener("resize", calculateAndDisplay);
+
+    calculateAndDisplay();
+  </script>
+</body>
+</html>
