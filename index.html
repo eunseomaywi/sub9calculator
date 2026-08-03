@@ -94,6 +94,43 @@
     footer{padding:34px 24px 50px;text-align:center;color:#666;font-size:12px}
     @media(max-width:1050px){.grid-4,.results-grid{grid-template-columns:repeat(2,1fr)}.reg-grid,.grid-3{grid-template-columns:repeat(2,1fr)}.score-layout{grid-template-columns:1fr}.target-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:720px){main{padding:14px}.grid-2,.grid-3,.grid-4,.results-grid,.reg-grid,.target-grid{grid-template-columns:1fr}.suggestion{grid-template-columns:1fr 1fr}.score-row{grid-template-columns:110px 1fr 48px}.panel{padding:17px}}
+
+    /* Tab navigation */
+    .tab-shell{width:min(1440px,100%);margin:0 auto;padding:0 24px}
+    .tabs{
+      position:sticky;top:0;z-index:50;
+      display:flex;gap:8px;overflow-x:auto;
+      padding:12px 0;
+      background:rgba(0,0,0,.94);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid #222;
+      scrollbar-width:thin;
+    }
+    .tab-btn{
+      flex:0 0 auto;
+      border:1px solid #444;
+      background:#090909;
+      color:#cfcfcf;
+      padding:10px 14px;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.04em;
+      cursor:pointer;
+    }
+    .tab-btn:hover{border-color:var(--olo);color:var(--olo)}
+    .tab-btn.active{
+      background:var(--olo);
+      border-color:var(--olo);
+      color:#000;
+    }
+    .tab-page{display:none}
+    .tab-page.active{display:block}
+    @media(max-width:720px){
+      .tab-shell{padding:0 14px}
+      .tabs{top:0}
+      .tab-btn{padding:9px 12px;font-size:11px}
+    }
+
   </style>
 </head>
 <body>
@@ -105,22 +142,25 @@
   </div>
 </header>
 
+<div class="tab-shell">
+  <div class="tabs" role="tablist" aria-label="SUB.9 calculator sections">
+    <button class="tab-btn active" data-tab="regulations" role="tab">01 Regulations</button>
+    <button class="tab-btn" data-tab="inputs" role="tab">02 CAD Inputs</button>
+    <button class="tab-btn" data-tab="simulation" role="tab">03 Simulation</button>
+    <button class="tab-btn" data-tab="target" role="tab">04 Target Optimizer</button>
+    <button class="tab-btn" data-tab="scoring" role="tab">05 Score & Advice</button>
+    <button class="tab-btn" data-tab="method" role="tab">06 Method</button>
+  </div>
+</div>
+
 <main>
   <div class="notice">
     예상 기록은 실제 CO₂ 추력곡선과 베어링·가이드 마찰을 완전히 측정한 값이 아니라 <b>보정 가능한 근사 모델</b>입니다.
     절대 기록보다 모델 간 비교와 목표 방향 탐색에 사용하세요.
   </div>
 
-  <nav class="topnav">
-    <a href="#regulations">Regulations</a>
-    <a href="#inputs">CAD Inputs</a>
-    <a href="#simulation">Simulation</a>
-    <a href="#target">Target Optimizer</a>
-    <a href="#scoring">Engineering Score</a>
-    <a href="#method">Method</a>
-  </nav>
 
-  <section id="regulations" class="panel">
+  <section id="regulations" class="panel tab-page active" data-tab-page="regulations">
     <h2>2026 Regulation Information</h2>
     <p class="panel-lead">업로드한 Aramco STEM Racing World Finals 2026 기술 규정에서 이 계산기와 직접 연결되는 핵심 절대 범위입니다. 도장과 데칼도 치수에 포함됩니다.</p>
     <div class="reg-grid">
@@ -139,7 +179,7 @@
     </div>
   </section>
 
-  <section id="inputs" class="panel">
+  <section id="inputs" class="panel tab-page" data-tab-page="inputs">
     <div class="section-title">
       <div><h2>Car Design Inputs</h2><small>🔒 Lock을 켜면 Target Optimizer가 그 값을 바꾸지 않습니다.</small></div>
       <span id="complianceBadge" class="status good">CHECKING</span>
@@ -216,7 +256,7 @@
     </div>
   </section>
 
-  <section id="simulation" class="panel">
+  <section id="simulation" class="panel tab-page" data-tab-page="simulation">
     <h2>20 m Time Simulation</h2>
     <p class="panel-lead">기본값은 문헌에서 확인된 22 m/s 분석 속도와 0.98–1.24 s 실주행 범위에 맞게 조정할 수 있는 단순화 모델입니다. 실제 팀 측정값이 생기면 Advanced Calibration 값을 교체하세요.</p>
 
@@ -262,7 +302,7 @@
     <canvas id="speedChart" width="1200" height="360"></canvas>
   </section>
 
-  <section id="target" class="panel">
+  <section id="target" class="panel tab-page" data-tab-page="target">
     <h2>Target Time Optimizer</h2>
     <p class="panel-lead">목표 기록을 입력하면 잠그지 않은 CAD 변수만 규정 및 현실적 설계 범위 안에서 탐색해, 어떤 값을 높이거나 낮춰야 하는지 보여줍니다.</p>
     <div class="target-box">
@@ -277,7 +317,7 @@
     </div>
   </section>
 
-  <section id="scoring" class="panel">
+  <section id="scoring" class="panel tab-page" data-tab-page="scoring">
     <h2>Engineering Performance Score</h2>
     <p class="panel-lead">절대적인 대회 채점표가 아니라 SUB.9 내부 설계 비교용 100점 시스템입니다. 규정 준수는 필수 게이트이며, 공력·질량·휠·제작성·예측 기록을 함께 봅니다.</p>
     <div class="score-layout">
@@ -297,7 +337,7 @@
     <div id="adviceList" class="advice-list"></div>
   </section>
 
-  <section id="method" class="panel">
+  <section id="method" class="panel tab-page" data-tab-page="method">
     <h2>Model Method & Limits</h2>
     <details open><summary>Longitudinal physics</summary><p>수치 적분으로 <span class="formula">m_eff·dv/dt = T(t) − ½ρCdAv² − Crr·mg − F_bearing</span>을 계산합니다. 바퀴 회전관성은 <span class="formula">m_eff = m_car + Σ(I/r²), I = k·m_w·r²</span>로 등가질량에 반영합니다.</p></details>
     <details><summary>Why the time is an estimate</summary><p>공식 규정에는 실제 추력-시간 곡선, 베어링 토크, 가이드 접촉 손실이 제공되지 않습니다. 따라서 기본값은 비교용 가정이며, 실제 차의 기록 한 번을 이용해 Launch efficiency를 보정하면 상대 예측이 훨씬 유용해집니다.</p></details>
@@ -549,6 +589,40 @@ $("applyBtn").addEventListener("click",applyRecommendation);
 $("quality").addEventListener("input",()=>{$("qualityValue").textContent=$("quality").value});
 document.querySelectorAll("#inputs input,#inputs select,#simulation input,#simulation select").forEach(el=>el.addEventListener("change",()=>{try{run()}catch{}}));
 window.addEventListener("resize",()=>{if(lastResult)drawChart(lastResult.res.history)});
+
+function activateTab(tabName){
+  document.querySelectorAll(".tab-btn").forEach(btn=>{
+    const active = btn.dataset.tab === tabName;
+    btn.classList.toggle("active", active);
+    btn.setAttribute("aria-selected", active ? "true" : "false");
+  });
+
+  document.querySelectorAll(".tab-page").forEach(page=>{
+    page.classList.toggle("active", page.dataset.tabPage === tabName);
+  });
+
+  window.scrollTo({top:0, behavior:"smooth"});
+
+  if(tabName === "simulation" && lastResult){
+    setTimeout(()=>drawChart(lastResult.res.history), 80);
+  }
+
+  try{
+    localStorage.setItem("sub9ActiveTab", tabName);
+  }catch{}
+}
+
+document.querySelectorAll(".tab-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>activateTab(btn.dataset.tab));
+});
+
+try{
+  const savedTab = localStorage.getItem("sub9ActiveTab");
+  if(savedTab && document.querySelector(`[data-tab="${savedTab}"]`)){
+    activateTab(savedTab);
+  }
+}catch{}
+
 run();
 </script>
 </body>
