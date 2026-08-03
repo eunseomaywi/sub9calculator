@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SUB.9 Engineering Suite</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SUB.9 Engineering Suite</title>
+<style>
     :root{
       --olo:#00ffcc;--yellow:#fffe00;--black:#000;--white:#fff;
       --panel:#0c0c0c;--line:#2d2d2d;--muted:#999;--bad:#ff6767;
@@ -82,163 +83,172 @@
 </head>
 <body>
 <header>
-  <div class="wrap">
-    <div class="eyebrow">SUB.9 · ENGINEERING SUITE</div>
-    <h1>Simple. Fast. <span style="color:var(--olo)">Engineering.</span></h1>
-    <p>CAD 입력 → 기록 예측 → 목표 최적화 → 모델 저장과 비교 → 리포트 출력까지 한 번에.</p>
-  </div>
-</header>
-
-<div class="tabs-wrap">
-  <div class="tabs">
-    <button class="tab-btn active" data-tab="overview">01 Overview</button>
-    <button class="tab-btn" data-tab="regulations">02 Regulations</button>
-    <button class="tab-btn" data-tab="inputs">03 CAD + Simulation</button>
-    <button class="tab-btn" data-tab="target">04 Target</button>
-    <button class="tab-btn" data-tab="compare">05 Compare</button>
-    <button class="tab-btn" data-tab="report">06 Report</button>
-    <button class="tab-btn" data-tab="settings">07 Settings</button>
-  </div>
+<div class="wrap">
+<div class="eyebrow">SUB.9 · ENGINEERING SUITE</div>
+<h1>Simple. Fast. <span style="color:var(--olo)">Engineering.</span></h1>
+<p>CAD 입력 → 기록 예측 → 목표 최적화 → 모델 저장과 비교 → 리포트 출력까지 한 번에.</p>
 </div>
+</header>
+<div class="tabs-wrap">
+<div class="tabs">
+<button class="tab-btn active" data-tab="overview">01 Overview</button>
+<button class="tab-btn" data-tab="regulations">02 Regulations</button>
+<button class="tab-btn" data-tab="inputs">03 CAD + Simulation</button>
 
+<button class="tab-btn" data-tab="target">04 Target</button>
+<button class="tab-btn" data-tab="compare">05 Compare</button>
+<button class="tab-btn" data-tab="report">06 Report</button>
+<button class="tab-btn" data-tab="settings">07 Settings</button>
+</div>
+</div>
 <main>
-  <div class="notice">
-    <b>Car Time</b>과 <b>Reaction Time</b>을 분리해서 보여줍니다. 차량 설계 점수에는 반응속도가 포함되지 않고,
+<div class="notice">
+<b>Car Time</b>과 <b>Reaction Time</b>을 분리해서 보여줍니다. 차량 설계 점수에는 반응속도가 포함되지 않고,
     Official Time 계산에만 더해집니다.
   </div>
+<section class="panel tab-page active" data-tab-page="overview" id="overview">
+<h2>Overview</h2>
+<p class="lead">가장 중요한 결과만 간단하게 봅니다.</p>
+<div class="metric-grid">
+<div class="metric primary"><div class="metric-label">Car time</div><div class="metric-value" id="ovCarTime">—</div><div class="metric-sub">차량 자체의 20 m 시간</div></div>
+<div class="metric"><div class="metric-label">Reaction time</div><div class="metric-value" id="ovReaction">—</div><div class="metric-sub">레이스 입력값</div></div>
+<div class="metric primary"><div class="metric-label">Official time</div><div class="metric-value" id="ovOfficial">—</div><div class="metric-sub">Car + Reaction</div></div>
+<div class="metric"><div class="metric-label">Design score</div><div class="metric-value" id="ovScore">—</div><div class="metric-sub">SUB.9 내부 점수 /100</div></div>
+</div>
+<div class="grid-2" style="margin-top:14px">
+<div class="score-ring">
+<div class="score-big" id="overallScore">—</div>
+<div>ENGINEERING SCORE / 100</div>
+<div id="scoreGrade" style="margin-top:10px;font-weight:900">Run simulation</div>
+</div>
+<div class="card">
+<h3>Score Breakdown</h3>
+<div class="bar-row"><span>Compliance</span><div class="bar"><span id="barCompliance"></span></div><b id="scoreCompliance">—</b></div>
+<div class="bar-row"><span>Aero</span><div class="bar"><span id="barAero"></span></div><b id="scoreAero">—</b></div>
+<div class="bar-row"><span>Mass</span><div class="bar"><span id="barMass"></span></div><b id="scoreMass">—</b></div>
+<div class="bar-row"><span>Wheels</span><div class="bar"><span id="barWheel"></span></div><b id="scoreWheel">—</b></div>
+<div class="bar-row"><span>Quality</span><div class="bar"><span id="barQuality"></span></div><b id="scoreQuality">—</b></div>
+<div class="bar-row"><span>Time</span><div class="bar"><span id="barTime"></span></div><b id="scoreTime">—</b></div>
+</div>
+</div>
+<div class="actions">
+<button class="btn" onclick="activateTab('inputs')">ENTER CAD VALUES</button>
+<button class="btn secondary" onclick="activateTab('inputs')">OPEN CAD + SIMULATION</button>
+</div>
+<div id="overviewAdvice" style="margin-top:16px"></div>
+</section>
+<section class="panel tab-page" data-tab-page="regulations" id="regulations">
+<h2>2026 Core Regulations</h2>
+<p class="lead">이 계산기에서 직접 검사하는 핵심 범위만 표시합니다.</p>
+<div class="reg-grid">
+<div class="reg"><b>T3.6</b><strong>Weight ≥ 48.0 g</strong><p>카트리지 제외 완성차.</p></div>
+<div class="reg"><b>T3.4</b><strong>Width 65–85 mm</strong><p>도장과 데칼 포함.</p></div>
+<div class="reg"><b>T3.5</b><strong>Height ≤ 65 mm</strong><p>8 g unit 삽입 상태.</p></div>
+<div class="reg"><b>T3.7</b><strong>Clearance ≥ 1.5 mm</strong><p>바퀴 제외 구성요소.</p></div>
+<div class="reg"><b>T7.5</b><strong>Wheel Ø 28–32 mm</strong><p>실제 구름면 기준.</p></div>
+<div class="reg"><b>T7.4</b><strong>Front ≥12 / Rear ≥15 mm</strong><p>트랙 접촉 폭.</p></div>
+<div class="reg"><b>T7.8</b><strong>Free rotation ≤3°</strong><p>네 바퀴 자유회전.</p></div>
+<div class="reg"><b>T8.6.1</b><strong>Front wing span ≥50 mm</strong><p>세그먼트 규정 별도 확인.</p></div>
+<div class="reg"><b>T9.5</b><strong>Rear span ≥50 mm</strong><p>Chord 15–25 mm.</p></div>
+</div>
+<div id="regCheckList" style="margin-top:15px"></div>
+</section>
+<section class="panel tab-page" data-tab-page="inputs" id="inputs">
+<h2>CAD Inputs + Performance Simulation</h2>
+<p class="lead">위에서 CAD 값을 입력하면 바로 아래 시뮬레이션 결과가 업데이트됩니다. 고정할 값은 LOCK을 켜세요.</p>
+<div class="grid-3">
+<div class="field"><label>Model name</label><input id="modelName" value="SUB.9 Model 01"/><div class="unit">저장·비교에 사용</div></div>
+<div class="field"><label>Vehicle mass <span class="lock"><input data-lock="mass" type="checkbox"/> LOCK</span></label><input id="mass" step="0.1" type="number" value="52"/><div class="unit">g</div></div>
+<div class="field"><label>Frontal area <span class="lock"><input data-lock="area" type="checkbox"/> LOCK</span></label><input id="area" step="1" type="number" value="1900"/><div class="unit">mm²</div></div>
+<div class="field"><label>Cd <span class="lock"><input data-lock="cd" type="checkbox"/> LOCK</span></label><input id="cd" step="0.01" type="number" value="0.16"/><div class="unit">CFD 전 시작값 0.16</div></div>
+<div class="field"><label>Wheel mass / each <span class="lock"><input data-lock="wheelMass" type="checkbox"/> LOCK</span></label><input id="wheelMass" step="0.05" type="number" value="1.4"/><div class="unit">g</div></div>
+<div class="field"><label>Wheel diameter <span class="lock"><input data-lock="wheelDiameter" type="checkbox"/> LOCK</span></label><input id="wheelDiameter" step="0.1" type="number" value="30"/><div class="unit">mm · 28–32</div></div>
+<div class="field"><label>Wheel shape <span class="lock"><input data-lock="wheelFactor" type="checkbox"/> LOCK</span></label><select id="wheelFactor"><option value="0.5">Solid disc</option><option selected="" value="0.65">Lightweight wheel</option><option value="0.8">Rim-biased</option><option value="1">Thin ring</option></select><div class="unit">회전관성 계수</div></div>
+<div class="field"><label>Total width</label><input id="width" step="0.1" type="number" value="74"/><div class="unit">mm</div></div>
+<div class="field"><label>Total height</label><input id="height" step="0.1" type="number" value="52"/><div class="unit">mm</div></div>
+<div class="field"><label>Track clearance</label><input id="clearance" step="0.1" type="number" value="2.5"/><div class="unit">mm</div></div>
+<div class="field"><label>Front contact width</label><input id="frontContact" step="0.1" type="number" value="12"/><div class="unit">mm</div></div>
+<div class="field"><label>Rear contact width</label><input id="rearContact" step="0.1" type="number" value="15"/><div class="unit">mm</div></div>
+<div class="field"><label>Manufacturing quality <span class="lock"><input data-lock="quality" type="checkbox"/> LOCK</span></label><input id="quality" max="100" min="0" type="range" value="75"/><div class="unit"><span id="qualityValue">75</span>/100 · 정렬, 표면, 베어링 상태</div></div>
+<div class="field"><label>Reaction time</label><input id="reactionTime" step="0.001" type="number" value="0.120"/><div class="unit">s · Official Time에만 포함</div></div>
+<div class="field"><label>Reaction included?</label><select id="includeReaction"><option selected="" value="yes">Yes · show official time</option><option value="no">No · car time only</option></select><div class="unit">설계 점수에는 항상 제외</div></div>
+</div>
+<div class="actions">
+<button class="btn" id="runBtnInputs">CALCULATE</button>
+<button class="btn secondary" id="saveModelBtn">SAVE MODEL</button>
+</div>
+<div style="height:1px;background:var(--line);margin:26px 0"></div>
+<h2>Simulation Results</h2>
+<p class="lead">현재 CAD 값으로 Car Time, Official Time, 속도와 에너지 손실을 계산합니다. Advanced settings는 처음에는 그대로 두면 됩니다.</p>
+<div class="metric-grid">
+<div class="metric primary"><div class="metric-label">Car time</div><div class="metric-value" id="simCarTime">—</div></div>
+<div class="metric"><div class="metric-label">Reaction</div><div class="metric-value" id="simReaction">—</div></div>
+<div class="metric primary"><div class="metric-label">Official time</div><div class="metric-value" id="simOfficial">—</div></div>
+<div class="metric"><div class="metric-label">Maximum speed</div><div class="metric-value" id="simMaxSpeed">—</div></div>
+<div class="metric"><div class="metric-label">Finish speed</div><div class="metric-value" id="simFinishSpeed">—</div></div>
+<div class="metric"><div class="metric-label">Peak drag</div><div class="metric-value" id="simPeakDrag">—</div></div>
+<div class="metric"><div class="metric-label">Effective mass</div><div class="metric-value" id="simEffectiveMass">—</div></div>
+<div class="metric"><div class="metric-label">Energy loss</div><div class="metric-value" id="simEnergyLoss">—</div></div>
+</div>
+<canvas id="speedChart"></canvas>
+<details style="margin-top:14px">
+<summary>Advanced simulation settings</summary>
+<div class="grid-3" style="margin-top:14px">
+<div class="field"><label>Peak thrust</label><input id="peakThrust" step="0.1" type="number" value="7.5"/><div class="unit">N</div></div>
+<div class="field"><label>Thrust duration</label><input id="thrustDuration" step="0.01" type="number" value="0.28"/><div class="unit">s</div></div>
+<div class="field"><label>Thrust shape</label><select id="thrustShape"><option selected="" value="linear">Linear decay</option><option value="constant">Constant</option><option value="exp">Exponential</option></select></div>
+<div class="field"><label>Rolling coefficient</label><input id="crrBase" step="0.001" type="number" value="0.012"/></div>
+<div class="field"><label>Bearing force</label><input id="bearingBase" step="0.001" type="number" value="0.015"/><div class="unit">N</div></div>
+<div class="field"><label>Launch efficiency</label><input id="launchEfficiency" step="0.01" type="number" value="0.86"/></div>
+</div>
+<div class="actions"><button class="btn secondary" id="calibrateBtn">CALIBRATE WITH REAL TIME</button></div>
+</details>
+</section>
 
-  <section id="overview" class="panel tab-page active" data-tab-page="overview">
-    <h2>Overview</h2>
-    <p class="lead">가장 중요한 결과만 간단하게 봅니다.</p>
-    <div class="metric-grid">
-      <div class="metric primary"><div class="metric-label">Car time</div><div id="ovCarTime" class="metric-value">—</div><div class="metric-sub">차량 자체의 20 m 시간</div></div>
-      <div class="metric"><div class="metric-label">Reaction time</div><div id="ovReaction" class="metric-value">—</div><div class="metric-sub">레이스 입력값</div></div>
-      <div class="metric primary"><div class="metric-label">Official time</div><div id="ovOfficial" class="metric-value">—</div><div class="metric-sub">Car + Reaction</div></div>
-      <div class="metric"><div class="metric-label">Design score</div><div id="ovScore" class="metric-value">—</div><div class="metric-sub">SUB.9 내부 점수 /100</div></div>
-    </div>
-
-    <div class="grid-2" style="margin-top:14px">
-      <div class="score-ring">
-        <div id="overallScore" class="score-big">—</div>
-        <div>ENGINEERING SCORE / 100</div>
-        <div id="scoreGrade" style="margin-top:10px;font-weight:900">Run simulation</div>
-      </div>
-      <div class="card">
-        <h3>Score Breakdown</h3>
-        <div class="bar-row"><span>Compliance</span><div class="bar"><span id="barCompliance"></span></div><b id="scoreCompliance">—</b></div>
-        <div class="bar-row"><span>Aero</span><div class="bar"><span id="barAero"></span></div><b id="scoreAero">—</b></div>
-        <div class="bar-row"><span>Mass</span><div class="bar"><span id="barMass"></span></div><b id="scoreMass">—</b></div>
-        <div class="bar-row"><span>Wheels</span><div class="bar"><span id="barWheel"></span></div><b id="scoreWheel">—</b></div>
-        <div class="bar-row"><span>Quality</span><div class="bar"><span id="barQuality"></span></div><b id="scoreQuality">—</b></div>
-        <div class="bar-row"><span>Time</span><div class="bar"><span id="barTime"></span></div><b id="scoreTime">—</b></div>
-      </div>
-    </div>
-
-    <div class="actions">
-      <button class="btn" onclick="activateTab('inputs')">ENTER CAD VALUES</button>
-      <button class="btn secondary" onclick="activateTab('inputs')">OPEN CAD + SIMULATION</button>
-    </div>
-    <div id="overviewAdvice" style="margin-top:16px"></div>
-  </section>
-
-  <section id="regulations" class="panel tab-page" data-tab-page="regulations">
-    <h2>2026 Core Regulations</h2>
-    <p class="lead">이 계산기에서 직접 검사하는 핵심 범위만 표시합니다.</p>
-    <div class="reg-grid">
-      <div class="reg"><b>T3.6</b><strong>Weight ≥ 48.0 g</strong><p>카트리지 제외 완성차.</p></div>
-      <div class="reg"><b>T3.4</b><strong>Width 65–85 mm</strong><p>도장과 데칼 포함.</p></div>
-      <div class="reg"><b>T3.5</b><strong>Height ≤ 65 mm</strong><p>8 g unit 삽입 상태.</p></div>
-      <div class="reg"><b>T3.7</b><strong>Clearance ≥ 1.5 mm</strong><p>바퀴 제외 구성요소.</p></div>
-      <div class="reg"><b>T7.5</b><strong>Wheel Ø 28–32 mm</strong><p>실제 구름면 기준.</p></div>
-      <div class="reg"><b>T7.4</b><strong>Front ≥12 / Rear ≥15 mm</strong><p>트랙 접촉 폭.</p></div>
-      <div class="reg"><b>T7.8</b><strong>Free rotation ≤3°</strong><p>네 바퀴 자유회전.</p></div>
-      <div class="reg"><b>T8.6.1</b><strong>Front wing span ≥50 mm</strong><p>세그먼트 규정 별도 확인.</p></div>
-      <div class="reg"><b>T9.5</b><strong>Rear span ≥50 mm</strong><p>Chord 15–25 mm.</p></div>
-    </div>
-    <div id="regCheckList" style="margin-top:15px"></div>
-  </section>
-
-  <section id="inputs" class="panel tab-page" data-tab-page="inputs">
-    <h2>CAD Inputs + Performance Simulation</h2>
-    <p class="lead">위에서 CAD 값을 입력하면 바로 아래 시뮬레이션 결과가 자동으로 업데이트됩니다. 고정할 값은 LOCK을 켜세요.</p>
-    <div class="grid-3">
-      <div class="field"><label>Model name</label><input id="modelName" value="SUB.9 Model 01"><div class="unit">저장·비교에 사용</div></div>
-      <div class="field"><label>Vehicle mass <span class="lock"><input data-lock="mass" type="checkbox"> LOCK</span></label><input id="mass" type="number" value="52" step="0.1"><div class="unit">g</div></div>
-      <div class="field"><label>Frontal area <span class="lock"><input data-lock="area" type="checkbox"> LOCK</span></label><input id="area" type="number" value="1900" step="1"><div class="unit">mm²</div></div>
-
-      <div class="field"><label>Cd <span class="lock"><input data-lock="cd" type="checkbox"> LOCK</span></label><input id="cd" type="number" value="0.16" step="0.01"><div class="unit">CFD 전 시작값 0.16</div></div>
-      <div class="field"><label>Wheel mass / each <span class="lock"><input data-lock="wheelMass" type="checkbox"> LOCK</span></label><input id="wheelMass" type="number" value="1.4" step="0.05"><div class="unit">g</div></div>
-      <div class="field"><label>Wheel diameter <span class="lock"><input data-lock="wheelDiameter" type="checkbox"> LOCK</span></label><input id="wheelDiameter" type="number" value="30" step="0.1"><div class="unit">mm · 28–32</div></div>
-
-      <div class="field"><label>Wheel shape <span class="lock"><input data-lock="wheelFactor" type="checkbox"> LOCK</span></label><select id="wheelFactor"><option value="0.5">Solid disc</option><option value="0.65" selected>Lightweight wheel</option><option value="0.8">Rim-biased</option><option value="1">Thin ring</option></select><div class="unit">회전관성 계수</div></div>
-      <div class="field"><label>Total width</label><input id="width" type="number" value="74" step="0.1"><div class="unit">mm</div></div>
-      <div class="field"><label>Total height</label><input id="height" type="number" value="52" step="0.1"><div class="unit">mm</div></div>
-
-      <div class="field"><label>Track clearance</label><input id="clearance" type="number" value="2.5" step="0.1"><div class="unit">mm</div></div>
-      <div class="field"><label>Front contact width</label><input id="frontContact" type="number" value="12" step="0.1"><div class="unit">mm</div></div>
-      <div class="field"><label>Rear contact width</label><input id="rearContact" type="number" value="15" step="0.1"><div class="unit">mm</div></div>
-
-      <div class="field"><label>Manufacturing quality <span class="lock"><input data-lock="quality" type="checkbox"> LOCK</span></label><input id="quality" type="range" min="0" max="100" value="75"><div class="unit"><span id="qualityValue">75</span>/100 · 정렬, 표면, 베어링 상태</div></div>
-      <div class="field"><label>Reaction time</label><input id="reactionTime" type="number" value="0.120" step="0.001"><div class="unit">s · Official Time에만 포함</div></div>
-      <div class="field"><label>Reaction included?</label><select id="includeReaction"><option value="yes" selected>Yes · show official time</option><option value="no">No · car time only</option></select><div class="unit">설계 점수에는 항상 제외</div></div>
-    </div>
-    <div class="actions">
-      <button id="runBtnInputs" class="btn">CALCULATE</button>
-      <button id="saveModelBtn" class="btn secondary">SAVE MODEL</button>
-    </div>
-  </section>
-
-  
-
-  <section id="target" class="panel tab-page" data-tab-page="target">
-    <h2>Target Optimizer</h2>
-    <p class="lead">목표 Car Time을 입력합니다. 반응속도는 차량 설계 최적화에서 제외됩니다.</p>
-    <div class="grid-3">
-      <div class="field"><label>Target car time</label><input id="targetTime" type="number" value="0.95" step="0.01"><div class="unit">s</div></div>
-      <div class="field"><label>Priority</label><select id="priority"><option value="balanced">Balanced</option><option value="aero">Aero first</option><option value="mass">Mass first</option><option value="wheels">Wheels first</option></select></div>
-      <div class="field"><label>Search depth</label><select id="iterations"><option value="1200">Fast</option><option value="4000" selected>Normal</option><option value="10000">Deep</option></select></div>
-    </div>
-    <div class="actions"><button id="optimizeBtn" class="btn warn">FIND TARGET DESIGN</button><button id="applyBtn" class="btn secondary" disabled>APPLY</button></div>
-    <div id="targetSummary" class="lead" style="margin-top:14px">잠글 값을 정한 뒤 실행하세요.</div>
-    <div id="targetAdvice"></div>
-  </section>
-
-  <section id="compare" class="panel tab-page" data-tab-page="compare">
-    <h2>Model Comparison</h2>
-    <p class="lead">현재 모델을 저장한 뒤 여러 버전을 비교합니다. 브라우저에 자동 저장됩니다.</p>
-    <div class="actions"><button id="saveCompareBtn" class="btn">SAVE CURRENT MODEL</button><button id="clearModelsBtn" class="btn secondary">CLEAR SAVED MODELS</button></div>
-    <div id="savedModels" class="saved-list"></div>
-    <div class="table-wrap" style="margin-top:14px">
-      <table>
-        <thead><tr><th>Model</th><th>Mass</th><th>Cd</th><th>Area</th><th>Wheel mass</th><th>Car time</th><th>Official</th><th>Score</th></tr></thead>
-        <tbody id="compareBody"><tr><td colspan="8" style="text-align:center;color:#777">No saved models</td></tr></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section id="report" class="panel tab-page" data-tab-page="report">
-    <h2>Engineering Report</h2>
-    <p class="lead">현재 결과를 한 장 리포트로 인쇄하거나 PDF로 저장합니다.</p>
-    <div class="actions"><button id="printBtn" class="btn">PRINT / SAVE PDF</button></div>
-    <div id="reportBox" class="report-box" style="margin-top:14px"></div>
-  </section>
-
-  <section id="settings" class="panel tab-page" data-tab-page="settings">
-    <h2>Settings & Calibration</h2>
-    <p class="lead">처음에는 기본값을 그대로 사용하세요. 실제 주행 기록이 생겼을 때만 보정하면 됩니다.</p>
-    <div class="grid-3">
-      <div class="field"><label>Track length</label><input id="trackLength" type="number" value="20" step="0.1"><div class="unit">m</div></div>
-      <div class="field"><label>Air density</label><input id="airDensity" type="number" value="1.225" step="0.001"><div class="unit">kg/m³</div></div>
-      <div class="field"><label>Simulation step</label><select id="dt"><option value="0.0005" selected>Normal</option><option value="0.001">Fast</option><option value="0.0002">Fine</option></select></div>
-    </div>
-    <div class="actions"><button id="resetBtn" class="btn secondary">RESET ALL DEFAULTS</button></div>
-    <details style="margin-top:14px" open><summary>How the model works</summary><p>차량 기록은 질량, 바퀴 회전관성, 공기저항, 구름저항, 베어링 손실과 CO₂ 추력 근사를 시간에 따라 적분해 계산합니다. Reaction Time은 별도로 더해 Official Time만 만듭니다.</p></details>
-    <details><summary>Important limitation</summary><p>공식 규정에는 실제 thrust-time curve와 베어링 손실이 없으므로 기본 기록은 근사치입니다. 실제 기록 한 번으로 Launch efficiency를 보정하면 모델 간 비교가 훨씬 유용해집니다.</p></details>
-  </section>
+<section class="panel tab-page" data-tab-page="target" id="target">
+<h2>Target Optimizer</h2>
+<p class="lead">목표 Car Time을 입력합니다. 반응속도는 차량 설계 최적화에서 제외됩니다.</p>
+<div class="grid-3">
+<div class="field"><label>Target car time</label><input id="targetTime" step="0.01" type="number" value="0.95"/><div class="unit">s</div></div>
+<div class="field"><label>Priority</label><select id="priority"><option value="balanced">Balanced</option><option value="aero">Aero first</option><option value="mass">Mass first</option><option value="wheels">Wheels first</option></select></div>
+<div class="field"><label>Search depth</label><select id="iterations"><option value="1200">Fast</option><option selected="" value="4000">Normal</option><option value="10000">Deep</option></select></div>
+</div>
+<div class="actions"><button class="btn warn" id="optimizeBtn">FIND TARGET DESIGN</button><button class="btn secondary" disabled="" id="applyBtn">APPLY</button></div>
+<div class="lead" id="targetSummary" style="margin-top:14px">잠글 값을 정한 뒤 실행하세요.</div>
+<div id="targetAdvice"></div>
+</section>
+<section class="panel tab-page" data-tab-page="compare" id="compare">
+<h2>Model Comparison</h2>
+<p class="lead">현재 모델을 저장한 뒤 여러 버전을 비교합니다. 브라우저에 자동 저장됩니다.</p>
+<div class="actions"><button class="btn" id="saveCompareBtn">SAVE CURRENT MODEL</button><button class="btn secondary" id="clearModelsBtn">CLEAR SAVED MODELS</button></div>
+<div class="saved-list" id="savedModels"></div>
+<div class="table-wrap" style="margin-top:14px">
+<table>
+<thead><tr><th>Model</th><th>Mass</th><th>Cd</th><th>Area</th><th>Wheel mass</th><th>Car time</th><th>Official</th><th>Score</th></tr></thead>
+<tbody id="compareBody"><tr><td colspan="8" style="text-align:center;color:#777">No saved models</td></tr></tbody>
+</table>
+</div>
+</section>
+<section class="panel tab-page" data-tab-page="report" id="report">
+<h2>Engineering Report</h2>
+<p class="lead">현재 결과를 한 장 리포트로 인쇄하거나 PDF로 저장합니다.</p>
+<div class="actions"><button class="btn" id="printBtn">PRINT / SAVE PDF</button></div>
+<div class="report-box" id="reportBox" style="margin-top:14px"></div>
+</section>
+<section class="panel tab-page" data-tab-page="settings" id="settings">
+<h2>Settings &amp; Calibration</h2>
+<p class="lead">처음에는 기본값을 그대로 사용하세요. 실제 주행 기록이 생겼을 때만 보정하면 됩니다.</p>
+<div class="grid-3">
+<div class="field"><label>Track length</label><input id="trackLength" step="0.1" type="number" value="20"/><div class="unit">m</div></div>
+<div class="field"><label>Air density</label><input id="airDensity" step="0.001" type="number" value="1.225"/><div class="unit">kg/m³</div></div>
+<div class="field"><label>Simulation step</label><select id="dt"><option selected="" value="0.0005">Normal</option><option value="0.001">Fast</option><option value="0.0002">Fine</option></select></div>
+</div>
+<div class="actions"><button class="btn secondary" id="resetBtn">RESET ALL DEFAULTS</button></div>
+<details open="" style="margin-top:14px"><summary>How the model works</summary><p>차량 기록은 질량, 바퀴 회전관성, 공기저항, 구름저항, 베어링 손실과 CO₂ 추력 근사를 시간에 따라 적분해 계산합니다. Reaction Time은 별도로 더해 Official Time만 만듭니다.</p></details>
+<details><summary>Important limitation</summary><p>공식 규정에는 실제 thrust-time curve와 베어링 손실이 없으므로 기본 기록은 근사치입니다. 실제 기록 한 번으로 Launch efficiency를 보정하면 모델 간 비교가 훨씬 유용해집니다.</p></details>
+</section>
 </main>
-
 <footer>SUB.9 Engineering · Push To Limit</footer>
-
 <script>
 const $=id=>document.getElementById(id);
 const G=9.80665;
