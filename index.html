@@ -6,7 +6,8 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   />
-  <title>SUB.9 Vehicle Dynamics Calculator</title>
+
+  <title>SUB.9 CAD Design Comparator</title>
 
   <style>
     :root {
@@ -14,162 +15,242 @@
       --yellow: #fffe00;
       --black: #000000;
       --white: #ffffff;
-      --gray: #eeeeee;
-      --dark-gray: #555555;
+      --panel: #0b0b0b;
+      --line: #2b2b2b;
+      --muted: #9a9a9a;
+      --danger: #ff5d5d;
     }
 
     * {
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       background: var(--black);
       color: var(--white);
-      font-family: Arial, Helvetica, sans-serif;
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
     }
 
     header {
-      border-bottom: 2px solid var(--olo);
-      padding: 28px 24px;
-      background:
-        linear-gradient(
-          135deg,
-          rgba(0, 255, 204, 0.13),
-          transparent 45%
-        );
+      position: relative;
+      overflow: hidden;
+      padding: 42px 24px 34px;
+      border-bottom: 1px solid var(--olo);
     }
 
-    header h1 {
-      margin: 0 0 8px;
-      font-size: clamp(28px, 5vw, 52px);
-      letter-spacing: -2px;
+    header::after {
+      content: "";
+      position: absolute;
+      width: 330px;
+      height: 330px;
+      top: -190px;
+      right: -100px;
+      border: 1px solid var(--olo);
+      border-radius: 50%;
+      opacity: 0.4;
     }
 
-    header p {
+    .header-inner {
+      width: min(1320px, 100%);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      margin-bottom: 12px;
+      color: var(--olo);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
       margin: 0;
-      max-width: 850px;
-      color: #cccccc;
-      line-height: 1.6;
+      max-width: 900px;
+      font-size: clamp(38px, 7vw, 78px);
+      line-height: 0.96;
+      letter-spacing: -0.055em;
     }
 
-    .accent {
+    .olo {
       color: var(--olo);
     }
 
+    header p {
+      max-width: 780px;
+      margin: 22px 0 0;
+      color: #c8c8c8;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
     main {
-      width: min(1400px, 100%);
+      width: min(1320px, 100%);
       margin: 0 auto;
       padding: 24px;
     }
 
-    .warning {
+    .notice {
+      margin-bottom: 24px;
+      padding: 15px 17px;
       border: 1px solid var(--yellow);
-      padding: 14px 16px;
-      margin-bottom: 22px;
       color: var(--yellow);
-      line-height: 1.5;
+      font-size: 13px;
+      line-height: 1.6;
     }
 
-    .layout {
+    .global-panel,
+    .model-panel,
+    .results-panel,
+    .formula-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+    }
+
+    .global-panel {
       display: grid;
-      grid-template-columns: minmax(320px, 1.1fr) minmax(300px, 0.9fr);
-      gap: 24px;
-      align-items: start;
+      grid-template-columns: 1.3fr repeat(3, minmax(140px, 0.6fr));
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 24px;
+      padding: 20px;
     }
 
-    .panel {
-      border: 1px solid #333333;
-      background: #0d0d0d;
-      padding: 22px;
-    }
-
-    .panel h2 {
-      margin-top: 0;
+    .global-copy h2 {
+      margin: 0 0 8px;
       font-size: 22px;
     }
 
-    .section {
-      border-top: 1px solid #333333;
-      padding-top: 18px;
-      margin-top: 22px;
+    .global-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
     }
 
-    .section:first-of-type {
-      border-top: none;
-      padding-top: 0;
-      margin-top: 0;
+    .models-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
     }
 
-    .section h3 {
-      margin: 0 0 14px;
-      font-size: 17px;
+    .model-panel {
+      padding: 22px;
+    }
+
+    .model-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .model-header h2 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .model-badge {
+      padding: 6px 9px;
+      border: 1px solid var(--olo);
       color: var(--olo);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
     }
 
     .input-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(140px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
     }
 
     label {
       display: block;
-      font-size: 13px;
-      color: #bbbbbb;
-      margin-bottom: 6px;
-    }
-
-    .field {
-      min-width: 0;
+      margin-bottom: 7px;
+      color: #bcbcbc;
+      font-size: 12px;
+      font-weight: 700;
     }
 
     input,
-    select,
-    textarea {
+    select {
       width: 100%;
-      border: 1px solid #444444;
-      background: #050505;
-      color: var(--white);
-      padding: 11px 12px;
-      font-size: 15px;
+      min-width: 0;
+      padding: 12px 13px;
+      border: 1px solid #3b3b3b;
+      border-radius: 0;
       outline: none;
+      background: #030303;
+      color: var(--white);
     }
 
     input:focus,
-    select:focus,
-    textarea:focus {
+    select:focus {
       border-color: var(--olo);
     }
 
-    .unit {
-      font-size: 11px;
-      color: #777777;
+    .unit-note {
       margin-top: 5px;
+      color: #707070;
+      font-size: 11px;
+      line-height: 1.4;
     }
 
-    button {
-      width: 100%;
-      padding: 15px 18px;
-      margin-top: 22px;
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .primary-button,
+    .secondary-button {
+      min-height: 52px;
+      padding: 13px 18px;
       border: 2px solid var(--olo);
+      cursor: pointer;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+
+    .primary-button {
       background: var(--olo);
       color: var(--black);
-      font-weight: 800;
-      font-size: 16px;
-      cursor: pointer;
     }
 
-    button:hover {
+    .primary-button:hover {
       background: transparent;
       color: var(--olo);
     }
 
     .secondary-button {
-      border-color: #555555;
       background: transparent;
+      border-color: #484848;
       color: var(--white);
-      margin-top: 10px;
     }
 
     .secondary-button:hover {
@@ -177,101 +258,234 @@
       color: var(--yellow);
     }
 
-    .result-grid {
+    .results-panel {
+      padding: 22px;
+    }
+
+    .results-panel > h2 {
+      margin: 0 0 18px;
+      font-size: 26px;
+    }
+
+    .winner {
       display: grid;
-      grid-template-columns: repeat(2, minmax(120px, 1fr));
-      gap: 12px;
+      grid-template-columns: auto 1fr;
+      gap: 15px;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 18px;
+      border: 1px solid var(--olo);
+      background: rgba(0, 255, 204, 0.045);
     }
 
-    .result-card {
-      border: 1px solid #333333;
-      padding: 16px;
-      min-height: 104px;
-    }
-
-    .result-card.primary {
-      border-color: var(--olo);
-    }
-
-    .result-label {
-      font-size: 12px;
-      color: #999999;
-      margin-bottom: 9px;
-    }
-
-    .result-value {
-      font-size: 25px;
-      font-weight: 800;
-      word-break: break-word;
-    }
-
-    .result-value.olo {
+    .winner-symbol {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      border: 1px solid var(--olo);
       color: var(--olo);
+      font-size: 26px;
+      font-weight: 900;
     }
 
-    .result-value.yellow {
-      color: var(--yellow);
+    .winner-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    .details {
-      margin-top: 20px;
-      border-top: 1px solid #333333;
-      padding-top: 16px;
+    .winner-name {
+      margin-top: 4px;
+      font-size: 25px;
+      font-weight: 900;
     }
 
-    .detail-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      border-bottom: 1px solid #222222;
-      padding: 10px 0;
+    .winner-reason {
+      margin-top: 6px;
+      color: #b7b7b7;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .comparison-table {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 740px;
+    }
+
+    th,
+    td {
+      padding: 13px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: right;
       font-size: 13px;
     }
 
-    .detail-row span:first-child {
-      color: #999999;
+    th:first-child,
+    td:first-child {
+      text-align: left;
     }
 
-    canvas {
-      width: 100%;
-      height: 260px;
-      background: #050505;
-      border: 1px solid #333333;
-      margin-top: 18px;
+    th {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
 
-    .model-note {
+    td strong {
+      font-size: 15px;
+    }
+
+    .better {
+      color: var(--olo);
+    }
+
+    .worse {
+      color: var(--danger);
+    }
+
+    .equal {
+      color: var(--yellow);
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .score-card {
+      border: 1px solid var(--line);
+      padding: 18px;
+    }
+
+    .score-card h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .score-number {
+      margin: 13px 0 6px;
+      color: var(--olo);
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .score-description {
+      color: var(--muted);
       font-size: 12px;
-      color: #888888;
-      line-height: 1.6;
-      margin-top: 18px;
+      line-height: 1.5;
+    }
+
+    .metric-bar {
+      position: relative;
+      height: 8px;
+      margin-top: 15px;
+      background: #242424;
+    }
+
+    .metric-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: var(--olo);
+      transition: width 0.35s ease;
+    }
+
+    .formula-panel {
+      margin-top: 24px;
+      padding: 22px;
+    }
+
+    .formula-panel h2 {
+      margin: 0 0 18px;
+      font-size: 25px;
+    }
+
+    .formula-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .formula-card {
+      border: 1px solid var(--line);
+      padding: 17px;
+    }
+
+    .formula-card h3 {
+      margin: 0 0 11px;
+      color: var(--olo);
+      font-size: 15px;
+    }
+
+    .formula {
+      overflow-x: auto;
+      padding: 12px;
+      background: #030303;
+      font-family:
+        "Courier New",
+        monospace;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .formula-card p {
+      margin: 11px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
     }
 
     footer {
-      padding: 32px 24px;
-      text-align: center;
-      color: #777777;
+      width: min(1320px, 100%);
+      margin: 0 auto;
+      padding: 34px 24px 44px;
+      color: #6f6f6f;
       font-size: 12px;
+      text-align: center;
     }
 
     @media (max-width: 900px) {
-      .layout {
+      .global-panel,
+      .models-grid {
         grid-template-columns: 1fr;
+      }
+
+      .global-panel {
+        align-items: stretch;
       }
     }
 
-    @media (max-width: 550px) {
+    @media (max-width: 600px) {
       main {
         padding: 14px;
       }
 
-      .panel {
-        padding: 16px;
+      header {
+        padding: 34px 18px 28px;
       }
 
       .input-grid,
-      .result-grid {
+      .score-grid,
+      .formula-grid,
+      .actions {
         grid-template-columns: 1fr;
+      }
+
+      .model-panel,
+      .results-panel,
+      .formula-panel {
+        padding: 17px;
       }
     }
   </style>
@@ -279,280 +493,513 @@
 
 <body>
   <header>
-    <h1>SUB.9 <span class="accent">Dynamics Calculator</span></h1>
-    <p>
-      F1 in Schools 차량의 종방향 가속, 공기저항, 회전관성,
-      노즐 오차 및 좌우 저항 차이를 이용해 20 m 주행시간과
-      횡방향 편차를 근사 계산합니다.
-    </p>
+    <div class="header-inner">
+      <div class="eyebrow">SUB.9 Engineering Tool</div>
+
+      <h1>
+        CAD Design
+        <span class="olo">Comparator</span>
+      </h1>
+
+      <p>
+        CAD에서 얻을 수 있는 차량 질량, 전면투영면적, 바퀴 질량과
+        크기를 이용해 두 차량 모델의 공기저항과 가속 효율을 비교합니다.
+        실제 레이스 기록을 예측하는 도구가 아니라 설계 선택을 돕는
+        상대 비교 도구입니다.
+      </p>
+    </div>
   </header>
 
   <main>
-    <div class="warning">
-      이 계산기는 설계 비교용 1차 물리 모델입니다.
-      실측 thrust-time curve, bearing torque, yaw inertia 및 가이드 접촉을
-      입력해야 정확도가 높아집니다.
+    <div class="notice">
+      정확한 20 m 기록을 계산하려면 CO₂ 추력곡선과 실제 마찰 측정값이
+      필요합니다. 이 계산기는 동일한 조건에서 어떤 CAD 모델이 더 유리한지
+      비교하는 용도로 사용하세요.
     </div>
 
-    <div class="layout">
-      <section class="panel">
-        <h2>Input Parameters</h2>
+    <section class="global-panel">
+      <div class="global-copy">
+        <h2>Comparison Conditions</h2>
+        <p>
+          두 모델에 공통으로 적용할 분석 조건입니다.
+          기본 속도는 문헌에서 사용된 22 m/s로 설정했습니다.
+        </p>
+      </div>
 
-        <div class="section">
-          <h3>Vehicle</h3>
+      <div class="field">
+        <label for="testSpeed">Analysis speed</label>
+        <input
+          id="testSpeed"
+          type="number"
+          min="0.1"
+          step="0.1"
+          value="22"
+        />
+        <div class="unit-note">m/s</div>
+      </div>
 
-          <div class="input-grid">
-            <div class="field">
-              <label for="trackLength">Track length</label>
-              <input id="trackLength" type="number" step="0.1" value="20" />
-              <div class="unit">m</div>
+      <div class="field">
+        <label for="airDensity">Air density</label>
+        <input
+          id="airDensity"
+          type="number"
+          min="0.1"
+          step="0.001"
+          value="1.225"
+        />
+        <div class="unit-note">kg/m³</div>
+      </div>
+
+      <div class="field">
+        <label for="wheelCount">Wheel count</label>
+        <input
+          id="wheelCount"
+          type="number"
+          min="1"
+          step="1"
+          value="4"
+        />
+        <div class="unit-note">보통 4개</div>
+      </div>
+    </section>
+
+    <section class="models-grid">
+      <article class="model-panel">
+        <div class="model-header">
+          <h2>Model A</h2>
+          <div class="model-badge">BASELINE</div>
+        </div>
+
+        <div class="input-grid">
+          <div class="field full">
+            <label for="nameA">Model name</label>
+            <input
+              id="nameA"
+              type="text"
+              value="Current Model"
+            />
+          </div>
+
+          <div class="field">
+            <label for="massA">Vehicle mass</label>
+            <input
+              id="massA"
+              type="number"
+              min="0.1"
+              step="0.1"
+              value="55"
+            />
+            <div class="unit-note">
+              g · CAD Mass Properties 또는 예상값
             </div>
+          </div>
 
-            <div class="field">
-              <label for="vehicleMass">Vehicle mass</label>
-              <input id="vehicleMass" type="number" step="1" value="55" />
-              <div class="unit">g</div>
+          <div class="field">
+            <label for="areaA">Frontal projected area</label>
+            <input
+              id="areaA"
+              type="number"
+              min="1"
+              step="1"
+              value="2000"
+            />
+            <div class="unit-note">
+              mm² · 정면 실루엣의 실제 투영면적
             </div>
+          </div>
 
-            <div class="field">
-              <label for="wheelCount">Wheel count</label>
-              <input id="wheelCount" type="number" step="1" value="4" />
-              <div class="unit">count</div>
+          <div class="field">
+            <label for="cdA">Drag coefficient Cd</label>
+            <input
+              id="cdA"
+              type="number"
+              min="0"
+              step="0.01"
+              value="0.16"
+            />
+            <div class="unit-note">
+              CFD 전에는 문헌 기준값 사용
             </div>
+          </div>
 
-            <div class="field">
-              <label for="wheelMass">Mass per wheel</label>
-              <input id="wheelMass" type="number" step="0.1" value="1.5" />
-              <div class="unit">g</div>
-            </div>
+          <div class="field">
+            <label for="wheelMassA">Mass per wheel</label>
+            <input
+              id="wheelMassA"
+              type="number"
+              min="0"
+              step="0.1"
+              value="1.5"
+            />
+            <div class="unit-note">g · 바퀴 하나의 질량</div>
+          </div>
 
-            <div class="field">
-              <label for="wheelRadius">Wheel radius</label>
-              <input id="wheelRadius" type="number" step="0.1" value="15" />
-              <div class="unit">mm</div>
-            </div>
+          <div class="field">
+            <label for="wheelRadiusA">Wheel radius</label>
+            <input
+              id="wheelRadiusA"
+              type="number"
+              min="0.1"
+              step="0.1"
+              value="15"
+            />
+            <div class="unit-note">mm</div>
+          </div>
 
-            <div class="field">
-              <label for="wheelInertiaFactor">Wheel inertia factor k</label>
-              <select id="wheelInertiaFactor">
-                <option value="0.5">0.5 — solid disc</option>
-                <option value="1">1.0 — thin ring</option>
-                <option value="0.65" selected>0.65 — lightweight wheel estimate</option>
-              </select>
-              <div class="unit">I = kmr²</div>
-            </div>
+          <div class="field">
+            <label for="wheelFactorA">Wheel shape</label>
+            <select id="wheelFactorA">
+              <option value="0.5">
+                Solid disc · k = 0.5
+              </option>
 
-            <div class="field">
-              <label for="yawInertia">Yaw moment of inertia</label>
-              <input id="yawInertia" type="number" step="0.000001" value="0.00012" />
-              <div class="unit">kg·m²</div>
-            </div>
+              <option value="0.65" selected>
+                Lightweight wheel · k = 0.65
+              </option>
 
-            <div class="field">
-              <label for="trackWidth">Left-right wheel spacing</label>
-              <input id="trackWidth" type="number" step="0.1" value="55" />
-              <div class="unit">mm</div>
+              <option value="1">
+                Thin ring · k = 1.0
+              </option>
+            </select>
+
+            <div class="unit-note">
+              I = kmr²
             </div>
           </div>
         </div>
+      </article>
 
-        <div class="section">
-          <h3>CO₂ Thrust</h3>
+      <article class="model-panel">
+        <div class="model-header">
+          <h2>Model B</h2>
+          <div class="model-badge">NEW DESIGN</div>
+        </div>
 
-          <div class="input-grid">
-            <div class="field">
-              <label for="peakThrust">Peak thrust</label>
-              <input id="peakThrust" type="number" step="0.1" value="8" />
-              <div class="unit">N — temporary estimate</div>
+        <div class="input-grid">
+          <div class="field full">
+            <label for="nameB">Model name</label>
+            <input
+              id="nameB"
+              type="text"
+              value="New Model"
+            />
+          </div>
+
+          <div class="field">
+            <label for="massB">Vehicle mass</label>
+            <input
+              id="massB"
+              type="number"
+              min="0.1"
+              step="0.1"
+              value="52"
+            />
+            <div class="unit-note">
+              g · CAD Mass Properties 또는 예상값
             </div>
+          </div>
 
-            <div class="field">
-              <label for="thrustDuration">Thrust duration</label>
-              <input id="thrustDuration" type="number" step="0.01" value="0.30" />
-              <div class="unit">s</div>
+          <div class="field">
+            <label for="areaB">Frontal projected area</label>
+            <input
+              id="areaB"
+              type="number"
+              min="1"
+              step="1"
+              value="1850"
+            />
+            <div class="unit-note">
+              mm² · 정면 실루엣의 실제 투영면적
             </div>
+          </div>
 
-            <div class="field">
-              <label for="thrustShape">Thrust curve shape</label>
-              <select id="thrustShape">
-                <option value="constant">Constant</option>
-                <option value="linear" selected>Linear decay</option>
-                <option value="exponential">Exponential decay</option>
-              </select>
-              <div class="unit">F(t)</div>
+          <div class="field">
+            <label for="cdB">Drag coefficient Cd</label>
+            <input
+              id="cdB"
+              type="number"
+              min="0"
+              step="0.01"
+              value="0.14"
+            />
+            <div class="unit-note">
+              CFD 전에는 문헌 기준값 사용
             </div>
+          </div>
 
-            <div class="field">
-              <label for="nozzleAngle">Nozzle misalignment</label>
-              <input id="nozzleAngle" type="number" step="0.01" value="0" />
-              <div class="unit">degree</div>
-            </div>
+          <div class="field">
+            <label for="wheelMassB">Mass per wheel</label>
+            <input
+              id="wheelMassB"
+              type="number"
+              min="0"
+              step="0.1"
+              value="1.2"
+            />
+            <div class="unit-note">g · 바퀴 하나의 질량</div>
+          </div>
 
-            <div class="field">
-              <label for="nozzleLeverArm">Nozzle–CoG lever arm</label>
-              <input id="nozzleLeverArm" type="number" step="0.1" value="70" />
-              <div class="unit">mm</div>
+          <div class="field">
+            <label for="wheelRadiusB">Wheel radius</label>
+            <input
+              id="wheelRadiusB"
+              type="number"
+              min="0.1"
+              step="0.1"
+              value="15"
+            />
+            <div class="unit-note">mm</div>
+          </div>
+
+          <div class="field">
+            <label for="wheelFactorB">Wheel shape</label>
+            <select id="wheelFactorB">
+              <option value="0.5">
+                Solid disc · k = 0.5
+              </option>
+
+              <option value="0.65" selected>
+                Lightweight wheel · k = 0.65
+              </option>
+
+              <option value="1">
+                Thin ring · k = 1.0
+              </option>
+            </select>
+
+            <div class="unit-note">
+              I = kmr²
             </div>
           </div>
         </div>
+      </article>
+    </section>
 
-        <div class="section">
-          <h3>Aerodynamics & Resistance</h3>
+    <div class="actions">
+      <button
+        id="compareButton"
+        class="primary-button"
+      >
+        COMPARE CAD MODELS
+      </button>
 
-          <div class="input-grid">
-            <div class="field">
-              <label for="dragCoefficient">Drag coefficient Cd</label>
-              <input id="dragCoefficient" type="number" step="0.01" value="0.16" />
-              <div class="unit">dimensionless</div>
-            </div>
-
-            <div class="field">
-              <label for="frontalArea">Frontal area</label>
-              <input id="frontalArea" type="number" step="0.0001" value="0.002" />
-              <div class="unit">m²</div>
-            </div>
-
-            <div class="field">
-              <label for="airDensity">Air density</label>
-              <input id="airDensity" type="number" step="0.001" value="1.225" />
-              <div class="unit">kg/m³</div>
-            </div>
-
-            <div class="field">
-              <label for="rollingCoefficient">Rolling resistance coefficient</label>
-              <input id="rollingCoefficient" type="number" step="0.001" value="0.01" />
-              <div class="unit">temporary estimate</div>
-            </div>
-
-            <div class="field">
-              <label for="bearingTorque">Total bearing friction torque</label>
-              <input id="bearingTorque" type="number" step="0.000001" value="0.00002" />
-              <div class="unit">N·m, all wheels combined</div>
-            </div>
-
-            <div class="field">
-              <label for="guideResistance">Guide longitudinal resistance</label>
-              <input id="guideResistance" type="number" step="0.001" value="0" />
-              <div class="unit">N</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3>Straight-Line Error</h3>
-
-          <div class="input-grid">
-            <div class="field">
-              <label for="leftRightForceDifference">Left-right resistance difference</label>
-              <input
-                id="leftRightForceDifference"
-                type="number"
-                step="0.001"
-                value="0"
-              />
-              <div class="unit">N, positive turns right</div>
-            </div>
-
-            <div class="field">
-              <label for="aeroYawMoment">Constant aerodynamic yaw moment</label>
-              <input id="aeroYawMoment" type="number" step="0.000001" value="0" />
-              <div class="unit">N·m</div>
-            </div>
-
-            <div class="field">
-              <label for="alignmentYawMoment">Alignment yaw moment</label>
-              <input id="alignmentYawMoment" type="number" step="0.000001" value="0" />
-              <div class="unit">N·m</div>
-            </div>
-
-            <div class="field">
-              <label for="yawDamping">Yaw damping coefficient</label>
-              <input id="yawDamping" type="number" step="0.000001" value="0.00008" />
-              <div class="unit">N·m·s/rad</div>
-            </div>
-          </div>
-        </div>
-
-        <button id="calculateButton">CALCULATE</button>
-        <button id="resetButton" class="secondary-button">RESET</button>
-      </section>
-
-      <section class="panel">
-        <h2>Results</h2>
-
-        <div class="result-grid">
-          <div class="result-card primary">
-            <div class="result-label">Estimated finish time</div>
-            <div id="finishTime" class="result-value olo">—</div>
-          </div>
-
-          <div class="result-card primary">
-            <div class="result-label">Finish lateral deviation</div>
-            <div id="finishDeviation" class="result-value yellow">—</div>
-          </div>
-
-          <div class="result-card">
-            <div class="result-label">Finish speed</div>
-            <div id="finishSpeed" class="result-value">—</div>
-          </div>
-
-          <div class="result-card">
-            <div class="result-label">Maximum speed</div>
-            <div id="maxSpeed" class="result-value">—</div>
-          </div>
-
-          <div class="result-card">
-            <div class="result-label">Yaw angle at finish</div>
-            <div id="finishYaw" class="result-value">—</div>
-          </div>
-
-          <div class="result-card">
-            <div class="result-label">Maximum lateral deviation</div>
-            <div id="maxDeviation" class="result-value">—</div>
-          </div>
-        </div>
-
-        <canvas id="chart" width="760" height="300"></canvas>
-
-        <div class="details">
-          <div class="detail-row">
-            <span>Effective vehicle mass</span>
-            <strong id="effectiveMass">—</strong>
-          </div>
-
-          <div class="detail-row">
-            <span>Peak aerodynamic drag</span>
-            <strong id="peakDrag">—</strong>
-          </div>
-
-          <div class="detail-row">
-            <span>Rolling resistance</span>
-            <strong id="rollingForce">—</strong>
-          </div>
-
-          <div class="detail-row">
-            <span>Bearing equivalent force</span>
-            <strong id="bearingForce">—</strong>
-          </div>
-
-          <div class="detail-row">
-            <span>Maximum yaw rate</span>
-            <strong id="maxYawRate">—</strong>
-          </div>
-
-          <div class="detail-row">
-            <span>Simulation steps</span>
-            <strong id="simulationSteps">—</strong>
-          </div>
-        </div>
-
-        <div class="model-note">
-          수치해석은 고정 시간 간격 Euler integration을 사용합니다.
-          가이드 와이어의 충돌과 복원력, 바퀴 slip, 축 진동 및
-          속도별 베어링 마찰 변화는 아직 포함하지 않았습니다.
-        </div>
-      </section>
+      <button
+        id="resetButton"
+        class="secondary-button"
+      >
+        RESET
+      </button>
     </div>
+
+    <section class="results-panel">
+      <h2>Comparison Results</h2>
+
+      <div class="winner">
+        <div
+          id="winnerSymbol"
+          class="winner-symbol"
+        >
+          —
+        </div>
+
+        <div>
+          <div class="winner-label">
+            Recommended design
+          </div>
+
+          <div
+            id="winnerName"
+            class="winner-name"
+          >
+            Enter both models
+          </div>
+
+          <div
+            id="winnerReason"
+            class="winner-reason"
+          >
+            두 모델의 CAD 값을 입력하고 비교하세요.
+          </div>
+        </div>
+      </div>
+
+      <div class="comparison-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th id="tableNameA">Model A</th>
+              <th id="tableNameB">Model B</th>
+              <th>Difference</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>Vehicle mass</td>
+              <td id="resultMassA">—</td>
+              <td id="resultMassB">—</td>
+              <td id="differenceMass">—</td>
+            </tr>
+
+            <tr>
+              <td>Frontal area</td>
+              <td id="resultAreaA">—</td>
+              <td id="resultAreaB">—</td>
+              <td id="differenceArea">—</td>
+            </tr>
+
+            <tr>
+              <td>Aerodynamic drag</td>
+              <td id="resultDragA">—</td>
+              <td id="resultDragB">—</td>
+              <td id="differenceDrag">—</td>
+            </tr>
+
+            <tr>
+              <td>Aerodynamic power loss</td>
+              <td id="resultPowerA">—</td>
+              <td id="resultPowerB">—</td>
+              <td id="differencePower">—</td>
+            </tr>
+
+            <tr>
+              <td>Total wheel inertia</td>
+              <td id="resultInertiaA">—</td>
+              <td id="resultInertiaB">—</td>
+              <td id="differenceInertia">—</td>
+            </tr>
+
+            <tr>
+              <td>Rotational equivalent mass</td>
+              <td id="resultRotMassA">—</td>
+              <td id="resultRotMassB">—</td>
+              <td id="differenceRotMass">—</td>
+            </tr>
+
+            <tr>
+              <td>Effective acceleration mass</td>
+              <td id="resultEffectiveMassA">—</td>
+              <td id="resultEffectiveMassB">—</td>
+              <td id="differenceEffectiveMass">—</td>
+            </tr>
+
+            <tr>
+              <td>Aero efficiency index</td>
+              <td id="resultAeroIndexA">—</td>
+              <td id="resultAeroIndexB">—</td>
+              <td id="differenceAeroIndex">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="score-grid">
+        <div class="score-card">
+          <h3 id="scoreNameA">Model A</h3>
+
+          <div
+            id="scoreA"
+            class="score-number"
+          >
+            —
+          </div>
+
+          <div class="score-description">
+            상대 설계 점수입니다. 더 낮은 공기저항과
+            더 낮은 유효질량을 가진 모델이 높은 점수를 받습니다.
+          </div>
+
+          <div class="metric-bar">
+            <div
+              id="scoreBarA"
+              class="metric-bar-fill"
+            ></div>
+          </div>
+        </div>
+
+        <div class="score-card">
+          <h3 id="scoreNameB">Model B</h3>
+
+          <div
+            id="scoreB"
+            class="score-number"
+          >
+            —
+          </div>
+
+          <div class="score-description">
+            점수는 실제 레이스 기록이 아니라 두 모델 간
+            상대 비교를 위해 정규화된 값입니다.
+          </div>
+
+          <div class="metric-bar">
+            <div
+              id="scoreBarB"
+              class="metric-bar-fill"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="formula-panel">
+      <h2>Physics Used</h2>
+
+      <div class="formula-grid">
+        <article class="formula-card">
+          <h3>Aerodynamic drag</h3>
+
+          <div class="formula">
+            Fd = 0.5 × ρ × Cd × A × v²
+          </div>
+
+          <p>
+            같은 속도에서는 Cd와 전면투영면적이 작을수록
+            공기저항이 작습니다.
+          </p>
+        </article>
+
+        <article class="formula-card">
+          <h3>Aerodynamic power</h3>
+
+          <div class="formula">
+            Pd = Fd × v
+          </div>
+
+          <p>
+            차량이 해당 속도를 유지하기 위해 공기저항에
+            소비해야 하는 순간 출력입니다.
+          </p>
+        </article>
+
+        <article class="formula-card">
+          <h3>Wheel rotational inertia</h3>
+
+          <div class="formula">
+            Iwheel = k × mw × rw²
+          </div>
+
+          <p>
+            바퀴 질량이 크고 질량이 바깥쪽에 몰릴수록
+            회전시키기 어렵습니다.
+          </p>
+        </article>
+
+        <article class="formula-card">
+          <h3>Effective acceleration mass</h3>
+
+          <div class="formula">
+            meff = mcar + Σ(Iwheel / rw²)
+          </div>
+
+          <p>
+            차체 질량과 바퀴의 회전관성을 하나의 등가질량으로
+            합친 값입니다. 작을수록 가속에 유리합니다.
+          </p>
+        </article>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -560,468 +1007,650 @@
   </footer>
 
   <script>
-    const G = 9.80665;
-    const DEG_TO_RAD = Math.PI / 180;
+    const byId = (id) => document.getElementById(id);
 
-    const getNumber = (id) => {
-      const value = Number(document.getElementById(id).value);
+    function readNumber(id) {
+      const value = Number(byId(id).value);
 
       if (!Number.isFinite(value)) {
         throw new Error(`${id} 값이 올바르지 않습니다.`);
       }
 
       return value;
-    };
-
-    function getThrust(t, peakThrust, duration, shape) {
-      if (t < 0 || t > duration || duration <= 0) {
-        return 0;
-      }
-
-      if (shape === "constant") {
-        return peakThrust;
-      }
-
-      if (shape === "linear") {
-        return peakThrust * Math.max(0, 1 - t / duration);
-      }
-
-      if (shape === "exponential") {
-        const decayRate = 5 / duration;
-        return peakThrust * Math.exp(-decayRate * t);
-      }
-
-      return 0;
     }
 
-    function validateInputs(params) {
+    function readText(id, fallback) {
+      const value = byId(id).value.trim();
+      return value || fallback;
+    }
+
+    function readModel(suffix) {
+      return {
+        name: readText(
+          `name${suffix}`,
+          `Model ${suffix}`
+        ),
+
+        massKg:
+          readNumber(`mass${suffix}`) /
+          1000,
+
+        frontalAreaM2:
+          readNumber(`area${suffix}`) /
+          1_000_000,
+
+        cd:
+          readNumber(`cd${suffix}`),
+
+        wheelMassKg:
+          readNumber(`wheelMass${suffix}`) /
+          1000,
+
+        wheelRadiusM:
+          readNumber(`wheelRadius${suffix}`) /
+          1000,
+
+        wheelFactor:
+          readNumber(`wheelFactor${suffix}`)
+      };
+    }
+
+    function validateModel(model) {
       const positiveValues = [
-        ["trackLength", params.trackLength],
-        ["vehicleMass", params.vehicleMass],
-        ["wheelCount", params.wheelCount],
-        ["wheelMass", params.wheelMass],
-        ["wheelRadius", params.wheelRadius],
-        ["yawInertia", params.yawInertia],
-        ["trackWidth", params.trackWidth],
-        ["frontalArea", params.frontalArea],
-        ["airDensity", params.airDensity]
+        ["vehicle mass", model.massKg],
+        ["frontal area", model.frontalAreaM2],
+        ["wheel radius", model.wheelRadiusM]
       ];
 
       for (const [name, value] of positiveValues) {
         if (value <= 0) {
-          throw new Error(`${name} 값은 0보다 커야 합니다.`);
+          throw new Error(
+            `${model.name}의 ${name} 값은 0보다 커야 합니다.`
+          );
         }
       }
 
-      if (params.dragCoefficient < 0) {
-        throw new Error("Cd는 음수가 될 수 없습니다.");
+      if (model.cd < 0) {
+        throw new Error(
+          `${model.name}의 Cd는 음수가 될 수 없습니다.`
+        );
       }
 
-      if (params.rollingCoefficient < 0) {
-        throw new Error("구름저항계수는 음수가 될 수 없습니다.");
+      if (model.wheelMassKg < 0) {
+        throw new Error(
+          `${model.name}의 바퀴 질량은 음수가 될 수 없습니다.`
+        );
       }
     }
 
-    function simulate() {
-      const params = {
-        trackLength: getNumber("trackLength"),
-        vehicleMass: getNumber("vehicleMass") / 1000,
-        wheelCount: getNumber("wheelCount"),
-        wheelMass: getNumber("wheelMass") / 1000,
-        wheelRadius: getNumber("wheelRadius") / 1000,
-        wheelInertiaFactor: getNumber("wheelInertiaFactor"),
-        yawInertia: getNumber("yawInertia"),
-        trackWidth: getNumber("trackWidth") / 1000,
+    function calculateModel(
+      model,
+      conditions
+    ) {
+      const {
+        speed,
+        airDensity,
+        wheelCount
+      } = conditions;
 
-        peakThrust: getNumber("peakThrust"),
-        thrustDuration: getNumber("thrustDuration"),
-        thrustShape: document.getElementById("thrustShape").value,
-        nozzleAngle: getNumber("nozzleAngle") * DEG_TO_RAD,
-        nozzleLeverArm: getNumber("nozzleLeverArm") / 1000,
+      const dragForce =
+        0.5 *
+        airDensity *
+        model.cd *
+        model.frontalAreaM2 *
+        speed ** 2;
 
-        dragCoefficient: getNumber("dragCoefficient"),
-        frontalArea: getNumber("frontalArea"),
-        airDensity: getNumber("airDensity"),
-        rollingCoefficient: getNumber("rollingCoefficient"),
-        bearingTorque: getNumber("bearingTorque"),
-        guideResistance: getNumber("guideResistance"),
+      const dragPower =
+        dragForce *
+        speed;
 
-        leftRightForceDifference: getNumber("leftRightForceDifference"),
-        aeroYawMoment: getNumber("aeroYawMoment"),
-        alignmentYawMoment: getNumber("alignmentYawMoment"),
-        yawDamping: getNumber("yawDamping")
-      };
+      const inertiaPerWheel =
+        model.wheelFactor *
+        model.wheelMassKg *
+        model.wheelRadiusM ** 2;
 
-      validateInputs(params);
-
-      const wheelInertia =
-        params.wheelInertiaFactor *
-        params.wheelMass *
-        params.wheelRadius ** 2;
+      const totalWheelInertia =
+        inertiaPerWheel *
+        wheelCount;
 
       const rotationalEquivalentMass =
-        params.wheelCount *
-        wheelInertia /
-        params.wheelRadius ** 2;
+        totalWheelInertia /
+        model.wheelRadiusM ** 2;
 
       const effectiveMass =
-        params.vehicleMass +
+        model.massKg +
         rotationalEquivalentMass;
 
-      const rollingForce =
-        params.rollingCoefficient *
-        params.vehicleMass *
-        G;
-
-      const bearingForce =
-        params.bearingTorque /
-        params.wheelRadius;
-
-      const wheelYawMoment =
-        params.leftRightForceDifference *
-        params.trackWidth /
-        2;
-
-      let t = 0;
-      let x = 0;
-      let vx = 0;
-
-      let y = 0;
-      let vy = 0;
-
-      let yaw = 0;
-      let yawRate = 0;
-
-      let maxSpeed = 0;
-      let maxDeviation = 0;
-      let maxYawRate = 0;
-      let peakDrag = 0;
-
-      const dt = 0.0001;
-      const maximumTime = 10;
-      const maximumSteps = Math.ceil(maximumTime / dt);
-
-      const history = [];
-      let steps = 0;
-
-      while (x < params.trackLength && steps < maximumSteps) {
-        const thrustMagnitude = getThrust(
-          t,
-          params.peakThrust,
-          params.thrustDuration,
-          params.thrustShape
-        );
-
-        const thrustX =
-          thrustMagnitude *
-          Math.cos(params.nozzleAngle);
-
-        const thrustY =
-          thrustMagnitude *
-          Math.sin(params.nozzleAngle);
-
-        const dragForce =
-          0.5 *
-          params.airDensity *
-          params.dragCoefficient *
-          params.frontalArea *
-          vx ** 2;
-
-        peakDrag = Math.max(peakDrag, dragForce);
-
-        const totalLongitudinalResistance =
-          dragForce +
-          rollingForce +
-          bearingForce +
-          params.guideResistance;
-
-        let longitudinalForce =
-          thrustX -
-          totalLongitudinalResistance;
-
-        if (vx <= 0 && longitudinalForce < 0) {
-          longitudinalForce = 0;
-        }
-
-        const ax = longitudinalForce / effectiveMass;
-
-        const nozzleYawMoment =
-          thrustY *
-          params.nozzleLeverArm;
-
-        const totalYawMoment =
-          nozzleYawMoment +
-          wheelYawMoment +
-          params.aeroYawMoment +
-          params.alignmentYawMoment -
-          params.yawDamping * yawRate;
-
-        const yawAcceleration =
-          totalYawMoment /
-          params.yawInertia;
-
-        /*
-          단순 횡방향 모델:
-          1. 노즐 횡력으로 직접 발생하는 횡가속
-          2. 차체가 yaw된 상태에서 전진속도의 방향 성분
-        */
-        const directLateralAcceleration =
-          thrustY /
-          params.vehicleMass;
-
-        yawRate += yawAcceleration * dt;
-        yaw += yawRate * dt;
-
-        vx += ax * dt;
-        vx = Math.max(0, vx);
-
-        vy += directLateralAcceleration * dt;
-
-        const worldVx =
-          vx * Math.cos(yaw);
-
-        const worldVy =
-          vx * Math.sin(yaw) + vy;
-
-        x += worldVx * dt;
-        y += worldVy * dt;
-
-        t += dt;
-        steps += 1;
-
-        maxSpeed = Math.max(maxSpeed, vx);
-        maxDeviation = Math.max(maxDeviation, Math.abs(y));
-        maxYawRate = Math.max(maxYawRate, Math.abs(yawRate));
-
-        if (steps % 100 === 0) {
-          history.push({
-            t,
-            x,
-            vx,
-            y,
-            yaw
-          });
-        }
-
-        if (vx === 0 && t > params.thrustDuration + 0.5) {
-          break;
-        }
-      }
-
-      const finished = x >= params.trackLength;
+      const aeroIndex =
+        model.cd *
+        model.frontalAreaM2;
 
       return {
-        finished,
-        finishTime: finished ? t : null,
-        finishSpeed: vx,
-        maxSpeed,
-        finishDeviation: y,
-        maxDeviation,
-        finishYaw: yaw,
-        maxYawRate,
+        ...model,
+        dragForce,
+        dragPower,
+        inertiaPerWheel,
+        totalWheelInertia,
+        rotationalEquivalentMass,
         effectiveMass,
-        peakDrag,
-        rollingForce,
-        bearingForce,
-        steps,
-        history
+        aeroIndex
       };
     }
 
-    function format(value, digits = 3) {
-      if (!Number.isFinite(value)) {
+    function lowerIsBetterClass(
+      first,
+      second
+    ) {
+      const tolerance =
+        Math.max(
+          Math.abs(first),
+          Math.abs(second),
+          1
+        ) * 1e-10;
+
+      if (
+        Math.abs(first - second) <=
+        tolerance
+      ) {
+        return ["equal", "equal"];
+      }
+
+      return first < second
+        ? ["better", "worse"]
+        : ["worse", "better"];
+    }
+
+    function setComparisonValues(
+      idA,
+      idB,
+      valueA,
+      valueB,
+      formatter
+    ) {
+      const elementA = byId(idA);
+      const elementB = byId(idB);
+
+      elementA.textContent =
+        formatter(valueA);
+
+      elementB.textContent =
+        formatter(valueB);
+
+      elementA.className = "";
+      elementB.className = "";
+
+      const [classA, classB] =
+        lowerIsBetterClass(
+          valueA,
+          valueB
+        );
+
+      elementA.classList.add(classA);
+      elementB.classList.add(classB);
+    }
+
+    function percentageDifference(
+      newValue,
+      baselineValue
+    ) {
+      if (baselineValue === 0) {
+        return null;
+      }
+
+      return (
+        ((newValue - baselineValue) /
+          baselineValue) *
+        100
+      );
+    }
+
+    function formatDifference(
+      difference,
+      lowerIsBetter = true
+    ) {
+      if (
+        difference === null ||
+        !Number.isFinite(difference)
+      ) {
         return "—";
       }
 
-      return value.toFixed(digits);
+      if (Math.abs(difference) < 0.005) {
+        return "0.00%";
+      }
+
+      const sign =
+        difference > 0 ? "+" : "";
+
+      const text =
+        `${sign}${difference.toFixed(2)}%`;
+
+      if (lowerIsBetter) {
+        return difference < 0
+          ? `${text} better`
+          : `${text} worse`;
+      }
+
+      return text;
     }
 
-    function updateResults(result) {
-      document.getElementById("finishTime").textContent =
-        result.finished
-          ? `${format(result.finishTime, 4)} s`
-          : "Did not finish";
+    function calculateScore(
+      model,
+      otherModel
+    ) {
+      const dragBest =
+        Math.min(
+          model.dragForce,
+          otherModel.dragForce
+        );
 
-      document.getElementById("finishDeviation").textContent =
-        `${format(result.finishDeviation * 1000, 2)} mm`;
+      const massBest =
+        Math.min(
+          model.effectiveMass,
+          otherModel.effectiveMass
+        );
 
-      document.getElementById("finishSpeed").textContent =
-        `${format(result.finishSpeed, 2)} m/s`;
+      const dragScore =
+        model.dragForce > 0
+          ? dragBest /
+            model.dragForce
+          : 1;
 
-      document.getElementById("maxSpeed").textContent =
-        `${format(result.maxSpeed, 2)} m/s`;
+      const massScore =
+        model.effectiveMass > 0
+          ? massBest /
+            model.effectiveMass
+          : 1;
 
-      document.getElementById("finishYaw").textContent =
-        `${format(result.finishYaw / DEG_TO_RAD, 3)}°`;
+      /*
+        상대 점수:
+        공력 60%, 유효질량 40%.
 
-      document.getElementById("maxDeviation").textContent =
-        `${format(result.maxDeviation * 1000, 2)} mm`;
-
-      document.getElementById("effectiveMass").textContent =
-        `${format(result.effectiveMass * 1000, 2)} g`;
-
-      document.getElementById("peakDrag").textContent =
-        `${format(result.peakDrag, 4)} N`;
-
-      document.getElementById("rollingForce").textContent =
-        `${format(result.rollingForce, 5)} N`;
-
-      document.getElementById("bearingForce").textContent =
-        `${format(result.bearingForce, 5)} N`;
-
-      document.getElementById("maxYawRate").textContent =
-        `${format(result.maxYawRate / DEG_TO_RAD, 3)} °/s`;
-
-      document.getElementById("simulationSteps").textContent =
-        result.steps.toLocaleString();
-
-      drawChart(result.history);
+        이는 실제 물리적 기여율이 아니라
+        CAD 모델 비교를 위한 UI 가중치다.
+      */
+      return (
+        100 *
+        (
+          0.6 * dragScore +
+          0.4 * massScore
+        )
+      );
     }
 
-    function drawChart(history) {
-      const canvas = document.getElementById("chart");
-      const ctx = canvas.getContext("2d");
-
-      const cssWidth = canvas.clientWidth;
-      const cssHeight = canvas.clientHeight;
-      const ratio = window.devicePixelRatio || 1;
-
-      canvas.width = cssWidth * ratio;
-      canvas.height = cssHeight * ratio;
-
-      ctx.scale(ratio, ratio);
-      ctx.clearRect(0, 0, cssWidth, cssHeight);
-
-      ctx.fillStyle = "#050505";
-      ctx.fillRect(0, 0, cssWidth, cssHeight);
-
-      const padding = {
-        left: 54,
-        right: 18,
-        top: 22,
-        bottom: 38
+    function compareModels() {
+      const conditions = {
+        speed: readNumber("testSpeed"),
+        airDensity:
+          readNumber("airDensity"),
+        wheelCount:
+          readNumber("wheelCount")
       };
 
-      const plotWidth =
-        cssWidth -
-        padding.left -
-        padding.right;
-
-      const plotHeight =
-        cssHeight -
-        padding.top -
-        padding.bottom;
-
-      ctx.strokeStyle = "#333333";
-      ctx.lineWidth = 1;
-
-      ctx.beginPath();
-      ctx.moveTo(padding.left, padding.top);
-      ctx.lineTo(padding.left, padding.top + plotHeight);
-      ctx.lineTo(padding.left + plotWidth, padding.top + plotHeight);
-      ctx.stroke();
-
-      if (!history.length) {
-        ctx.fillStyle = "#888888";
-        ctx.font = "13px Arial";
-        ctx.fillText(
-          "No simulation data",
-          padding.left + 18,
-          padding.top + 30
+      if (conditions.speed <= 0) {
+        throw new Error(
+          "분석 속도는 0보다 커야 합니다."
         );
+      }
+
+      if (conditions.airDensity <= 0) {
+        throw new Error(
+          "공기 밀도는 0보다 커야 합니다."
+        );
+      }
+
+      if (
+        !Number.isInteger(
+          conditions.wheelCount
+        ) ||
+        conditions.wheelCount <= 0
+      ) {
+        throw new Error(
+          "바퀴 개수는 1 이상의 정수여야 합니다."
+        );
+      }
+
+      const inputA = readModel("A");
+      const inputB = readModel("B");
+
+      validateModel(inputA);
+      validateModel(inputB);
+
+      const modelA =
+        calculateModel(
+          inputA,
+          conditions
+        );
+
+      const modelB =
+        calculateModel(
+          inputB,
+          conditions
+        );
+
+      updateResults(modelA, modelB);
+    }
+
+    function updateResults(
+      modelA,
+      modelB
+    ) {
+      byId("tableNameA").textContent =
+        modelA.name;
+
+      byId("tableNameB").textContent =
+        modelB.name;
+
+      byId("scoreNameA").textContent =
+        modelA.name;
+
+      byId("scoreNameB").textContent =
+        modelB.name;
+
+      setComparisonValues(
+        "resultMassA",
+        "resultMassB",
+        modelA.massKg,
+        modelB.massKg,
+        (value) =>
+          `${(value * 1000).toFixed(2)} g`
+      );
+
+      setComparisonValues(
+        "resultAreaA",
+        "resultAreaB",
+        modelA.frontalAreaM2,
+        modelB.frontalAreaM2,
+        (value) =>
+          `${(
+            value *
+            1_000_000
+          ).toFixed(0)} mm²`
+      );
+
+      setComparisonValues(
+        "resultDragA",
+        "resultDragB",
+        modelA.dragForce,
+        modelB.dragForce,
+        (value) =>
+          `${value.toFixed(4)} N`
+      );
+
+      setComparisonValues(
+        "resultPowerA",
+        "resultPowerB",
+        modelA.dragPower,
+        modelB.dragPower,
+        (value) =>
+          `${value.toFixed(3)} W`
+      );
+
+      setComparisonValues(
+        "resultInertiaA",
+        "resultInertiaB",
+        modelA.totalWheelInertia,
+        modelB.totalWheelInertia,
+        (value) =>
+          `${value.toExponential(3)} kg·m²`
+      );
+
+      setComparisonValues(
+        "resultRotMassA",
+        "resultRotMassB",
+        modelA.rotationalEquivalentMass,
+        modelB.rotationalEquivalentMass,
+        (value) =>
+          `${(value * 1000).toFixed(2)} g`
+      );
+
+      setComparisonValues(
+        "resultEffectiveMassA",
+        "resultEffectiveMassB",
+        modelA.effectiveMass,
+        modelB.effectiveMass,
+        (value) =>
+          `${(value * 1000).toFixed(2)} g`
+      );
+
+      setComparisonValues(
+        "resultAeroIndexA",
+        "resultAeroIndexB",
+        modelA.aeroIndex,
+        modelB.aeroIndex,
+        (value) =>
+          value.toExponential(3)
+      );
+
+      byId("differenceMass").textContent =
+        formatDifference(
+          percentageDifference(
+            modelB.massKg,
+            modelA.massKg
+          )
+        );
+
+      byId("differenceArea").textContent =
+        formatDifference(
+          percentageDifference(
+            modelB.frontalAreaM2,
+            modelA.frontalAreaM2
+          )
+        );
+
+      byId("differenceDrag").textContent =
+        formatDifference(
+          percentageDifference(
+            modelB.dragForce,
+            modelA.dragForce
+          )
+        );
+
+      byId("differencePower").textContent =
+        formatDifference(
+          percentageDifference(
+            modelB.dragPower,
+            modelA.dragPower
+          )
+        );
+
+      byId("differenceInertia").textContent =
+        formatDifference(
+          percentageDifference(
+            modelB.totalWheelInertia,
+            modelA.totalWheelInertia
+          )
+        );
+
+      byId("differenceRotMass").textContent =
+        formatDifference(
+          percentageDifference(
+            modelB.rotationalEquivalentMass,
+            modelA.rotationalEquivalentMass
+          )
+        );
+
+      byId(
+        "differenceEffectiveMass"
+      ).textContent =
+        formatDifference(
+          percentageDifference(
+            modelB.effectiveMass,
+            modelA.effectiveMass
+          )
+        );
+
+      byId(
+        "differenceAeroIndex"
+      ).textContent =
+        formatDifference(
+          percentageDifference(
+            modelB.aeroIndex,
+            modelA.aeroIndex
+          )
+        );
+
+      const scoreA =
+        calculateScore(
+          modelA,
+          modelB
+        );
+
+      const scoreB =
+        calculateScore(
+          modelB,
+          modelA
+        );
+
+      byId("scoreA").textContent =
+        scoreA.toFixed(1);
+
+      byId("scoreB").textContent =
+        scoreB.toFixed(1);
+
+      byId("scoreBarA").style.width =
+        `${Math.min(scoreA, 100)}%`;
+
+      byId("scoreBarB").style.width =
+        `${Math.min(scoreB, 100)}%`;
+
+      updateWinner(
+        modelA,
+        modelB,
+        scoreA,
+        scoreB
+      );
+    }
+
+    function updateWinner(
+      modelA,
+      modelB,
+      scoreA,
+      scoreB
+    ) {
+      const scoreDifference =
+        Math.abs(scoreA - scoreB);
+
+      if (scoreDifference < 0.05) {
+        byId("winnerSymbol").textContent =
+          "=";
+
+        byId("winnerName").textContent =
+          "Models are effectively equal";
+
+        byId("winnerReason").textContent =
+          "현재 입력값 기준으로 두 CAD 모델의 공력 및 유효질량 차이가 매우 작습니다.";
+
         return;
       }
 
-      const maxX =
-        Math.max(...history.map((point) => point.x), 1);
+      const winner =
+        scoreA > scoreB
+          ? modelA
+          : modelB;
 
-      const maxAbsY =
-        Math.max(
-          ...history.map((point) => Math.abs(point.y)),
-          0.001
+      const loser =
+        scoreA > scoreB
+          ? modelB
+          : modelA;
+
+      const dragChange =
+        percentageDifference(
+          winner.dragForce,
+          loser.dragForce
         );
 
-      const xScale = plotWidth / maxX;
-      const yScale = plotHeight / (maxAbsY * 2);
+      const massChange =
+        percentageDifference(
+          winner.effectiveMass,
+          loser.effectiveMass
+        );
 
-      const centerY =
-        padding.top +
-        plotHeight / 2;
+      const reasons = [];
 
-      ctx.strokeStyle = "#444444";
-      ctx.beginPath();
-      ctx.moveTo(padding.left, centerY);
-      ctx.lineTo(padding.left + plotWidth, centerY);
-      ctx.stroke();
-
-      ctx.strokeStyle = "#00ffcc";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-
-      history.forEach((point, index) => {
-        const px =
-          padding.left +
-          point.x * xScale;
-
-        const py =
-          centerY -
-          point.y * yScale;
-
-        if (index === 0) {
-          ctx.moveTo(px, py);
-        } else {
-          ctx.lineTo(px, py);
-        }
-      });
-
-      ctx.stroke();
-
-      ctx.fillStyle = "#aaaaaa";
-      ctx.font = "12px Arial";
-
-      ctx.fillText(
-        "Distance x (m)",
-        padding.left + plotWidth / 2 - 35,
-        cssHeight - 10
-      );
-
-      ctx.save();
-      ctx.translate(14, padding.top + plotHeight / 2 + 40);
-      ctx.rotate(-Math.PI / 2);
-      ctx.fillText("Lateral deviation y", 0, 0);
-      ctx.restore();
-
-      ctx.fillStyle = "#00ffcc";
-      ctx.fillText(
-        `±${(maxAbsY * 1000).toFixed(1)} mm`,
-        padding.left + 8,
-        padding.top + 14
-      );
-    }
-
-    function calculateAndDisplay() {
-      try {
-        const result = simulate();
-        updateResults(result);
-      } catch (error) {
-        console.error(error);
-        alert(error.message);
+      if (
+        winner.dragForce <
+        loser.dragForce
+      ) {
+        reasons.push(
+          `공기저항이 ${Math.abs(
+            dragChange
+          ).toFixed(1)}% 낮음`
+        );
       }
+
+      if (
+        winner.effectiveMass <
+        loser.effectiveMass
+      ) {
+        reasons.push(
+          `유효질량이 ${Math.abs(
+            massChange
+          ).toFixed(1)}% 낮음`
+        );
+      }
+
+      if (reasons.length === 0) {
+        reasons.push(
+          "공력과 질량의 종합 균형이 더 유리함"
+        );
+      }
+
+      byId("winnerSymbol").textContent =
+        winner === modelA ? "A" : "B";
+
+      byId("winnerName").textContent =
+        winner.name;
+
+      byId("winnerReason").textContent =
+        reasons.join(" · ");
     }
 
-    document
-      .getElementById("calculateButton")
-      .addEventListener("click", calculateAndDisplay);
+    function resetCalculator() {
+      window.location.reload();
+    }
+
+    byId("compareButton")
+      .addEventListener(
+        "click",
+        () => {
+          try {
+            compareModels();
+          } catch (error) {
+            console.error(error);
+            alert(error.message);
+          }
+        }
+      );
+
+    byId("resetButton")
+      .addEventListener(
+        "click",
+        resetCalculator
+      );
 
     document
-      .getElementById("resetButton")
-      .addEventListener("click", () => {
-        window.location.reload();
+      .querySelectorAll(
+        "input, select"
+      )
+      .forEach((element) => {
+        element.addEventListener(
+          "change",
+          () => {
+            try {
+              compareModels();
+            } catch {
+              // 사용자가 입력 중인 경우 경고창을 띄우지 않음
+            }
+          }
+        );
       });
 
-    window.addEventListener("resize", calculateAndDisplay);
-
-    calculateAndDisplay();
+    try {
+      compareModels();
+    } catch (error) {
+      console.error(error);
+    }
   </script>
 </body>
 </html>
