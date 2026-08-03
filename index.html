@@ -93,12 +93,11 @@
   <div class="tabs">
     <button class="tab-btn active" data-tab="overview">01 Overview</button>
     <button class="tab-btn" data-tab="regulations">02 Regulations</button>
-    <button class="tab-btn" data-tab="inputs">03 CAD Inputs</button>
-    <button class="tab-btn" data-tab="simulation">04 Simulation</button>
-    <button class="tab-btn" data-tab="target">05 Target</button>
-    <button class="tab-btn" data-tab="compare">06 Compare</button>
-    <button class="tab-btn" data-tab="report">07 Report</button>
-    <button class="tab-btn" data-tab="settings">08 Settings</button>
+    <button class="tab-btn" data-tab="inputs">03 CAD + Simulation</button>
+    <button class="tab-btn" data-tab="target">04 Target</button>
+    <button class="tab-btn" data-tab="compare">05 Compare</button>
+    <button class="tab-btn" data-tab="report">06 Report</button>
+    <button class="tab-btn" data-tab="settings">07 Settings</button>
   </div>
 </div>
 
@@ -137,7 +136,7 @@
 
     <div class="actions">
       <button class="btn" onclick="activateTab('inputs')">ENTER CAD VALUES</button>
-      <button class="btn secondary" onclick="activateTab('simulation')">OPEN SIMULATION</button>
+      <button class="btn secondary" onclick="activateTab('inputs')">OPEN CAD + SIMULATION</button>
     </div>
     <div id="overviewAdvice" style="margin-top:16px"></div>
   </section>
@@ -160,8 +159,8 @@
   </section>
 
   <section id="inputs" class="panel tab-page" data-tab-page="inputs">
-    <h2>CAD Inputs</h2>
-    <p class="lead">필수 입력만 남겼습니다. 고정할 값은 LOCK을 켜세요.</p>
+    <h2>CAD Inputs + Performance Simulation</h2>
+    <p class="lead">위에서 CAD 값을 입력하면 바로 아래 시뮬레이션 결과가 자동으로 업데이트됩니다. 고정할 값은 LOCK을 켜세요.</p>
     <div class="grid-3">
       <div class="field"><label>Model name</label><input id="modelName" value="SUB.9 Model 01"><div class="unit">저장·비교에 사용</div></div>
       <div class="field"><label>Vehicle mass <span class="lock"><input data-lock="mass" type="checkbox"> LOCK</span></label><input id="mass" type="number" value="52" step="0.1"><div class="unit">g</div></div>
@@ -189,36 +188,7 @@
     </div>
   </section>
 
-  <section id="simulation" class="panel tab-page" data-tab-page="simulation">
-    <h2>Performance Simulation</h2>
-    <p class="lead">기본 설정은 그대로 두고 결과만 봐도 됩니다.</p>
-
-    <div class="metric-grid">
-      <div class="metric primary"><div class="metric-label">Car time</div><div id="simCarTime" class="metric-value">—</div></div>
-      <div class="metric"><div class="metric-label">Reaction</div><div id="simReaction" class="metric-value">—</div></div>
-      <div class="metric primary"><div class="metric-label">Official time</div><div id="simOfficial" class="metric-value">—</div></div>
-      <div class="metric"><div class="metric-label">Maximum speed</div><div id="simMaxSpeed" class="metric-value">—</div></div>
-      <div class="metric"><div class="metric-label">Finish speed</div><div id="simFinishSpeed" class="metric-value">—</div></div>
-      <div class="metric"><div class="metric-label">Peak drag</div><div id="simPeakDrag" class="metric-value">—</div></div>
-      <div class="metric"><div class="metric-label">Effective mass</div><div id="simEffectiveMass" class="metric-value">—</div></div>
-      <div class="metric"><div class="metric-label">Energy loss</div><div id="simEnergyLoss" class="metric-value">—</div></div>
-    </div>
-
-    <canvas id="speedChart"></canvas>
-
-    <details style="margin-top:14px">
-      <summary>Advanced simulation settings</summary>
-      <div class="grid-3" style="margin-top:14px">
-        <div class="field"><label>Peak thrust</label><input id="peakThrust" type="number" value="7.5" step="0.1"><div class="unit">N</div></div>
-        <div class="field"><label>Thrust duration</label><input id="thrustDuration" type="number" value="0.28" step="0.01"><div class="unit">s</div></div>
-        <div class="field"><label>Thrust shape</label><select id="thrustShape"><option value="linear" selected>Linear decay</option><option value="constant">Constant</option><option value="exp">Exponential</option></select></div>
-        <div class="field"><label>Rolling coefficient</label><input id="crrBase" type="number" value="0.012" step="0.001"></div>
-        <div class="field"><label>Bearing force</label><input id="bearingBase" type="number" value="0.015" step="0.001"><div class="unit">N</div></div>
-        <div class="field"><label>Launch efficiency</label><input id="launchEfficiency" type="number" value="0.86" step="0.01"></div>
-      </div>
-      <div class="actions"><button id="calibrateBtn" class="btn secondary">CALIBRATE WITH REAL TIME</button></div>
-    </details>
-  </section>
+  
 
   <section id="target" class="panel tab-page" data-tab-page="target">
     <h2>Target Optimizer</h2>
@@ -277,7 +247,7 @@ let last=null,recommended=null;
 function activateTab(name){
   document.querySelectorAll(".tab-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
   document.querySelectorAll(".tab-page").forEach(p=>p.classList.toggle("active",p.dataset.tabPage===name));
-  if(name==="simulation"&&last)setTimeout(()=>draw(last.result.history),60);
+  if(name==="inputs"&&last)setTimeout(()=>draw(last.result.history),60);
   if(name==="report")renderReport();
   window.scrollTo({top:0,behavior:"smooth"});
   localStorage.setItem("sub9-tab",name);
